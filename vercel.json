@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm install && npm run typecheck -w server && npm run build -w web",
+  "outputDirectory": "web/dist",
+  "installCommand": "npm install",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api"
+    },
+    {
+      "source": "/s/:path*",
+      "destination": "/api"
+    },
+    {
+      "source": "/((?!api/|s/|assets/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: dfvleads
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build -w server && npm run build -w web
+    startCommand: npm run start -w server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_MODELO
+        value: openai/gpt-oss-120b
+      - key: UNSPLASH_ACCESS_KEY
+        sync: false
+      - key: APP_BASE_URL
+        value: https://SEU-APP.onrender.com
+      # Auto-ping: mantém o serviço sempre acordado (não dorme após 15 min).
+      - key: AUTO_PING_URL
+        value: https://SEU-APP.onrender.com/api/health
+      - key: AUTO_PING_MIN
+        value: "5"
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_SECRET
+        sync: false
+      - key: PAYPAL_SANDBOX
+        value: "false"
+      - key: BINANCE_PAY_KEY
+        sync: false
+      - key: BINANCE_PAY_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://SEU-APP.onrender.com
+      - key: VITE_API_URL
+        value: ""
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false

@@ -1,0 +1,17 @@
+# deps
+node_modules/
+package-lock.json
+
+# builds
+server/dist/
+web/dist/
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# misc
+.DS_Store
+*.log

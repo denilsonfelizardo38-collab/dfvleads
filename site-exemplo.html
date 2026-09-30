@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barbearia Navalha de Ouro – Corte e Barba em Luanda</title>
+<meta name="description" content="Barbearia Navalha de Ouro oferece cortes modernos, aparos de barba e cuidados masculinos em Luanda, com profissionais experientes e ambiente acolhedor.">
+<meta name="keywords" content="Barbearia Luanda, Corte de cabelo Angola, Aparar barba Cazenga, Barbearia Navalha de Ouro, Serviços de barbearia Luanda">
+<meta property="og:title" content="Barbearia Navalha de Ouro – Corte e Barba em Luanda">
+<meta property="og:description" content="Barbearia Navalha de Ouro oferece cortes modernos, aparos de barba e cuidados masculinos em Luanda, com profissionais experientes e ambiente acolhedor.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://images.pexels.com/photos/7447144/pexels-photo-7447144.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280">
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HairSalon","name":"Barbearia Navalha de Ouro","description":"Barbearia Navalha de Ouro oferece cortes modernos, aparos de barba e cuidados masculinos em Luanda, com profissionais experientes e ambiente acolhedor.","address":{"@type":"PostalAddress","addressLocality":"Luanda"},"telephone":"+244 923 000 111","aggregateRating":{"@type":"AggregateRating","ratingValue":4.8,"reviewCount":132}}</script>
+<style>
+:root{
+  --p:#c5a880;--a:#000000;--bg:#faf8f4;--ink:#1a140e;--btn:#ffffff;
+  --card:#ffffff;--borda:rgba(0,0,0,.09);--mut:#6d6a62;--pSuave:#c5a88014;--pBorda:#c5a88045;
+  --fonte:system-ui,-apple-system,'Segoe UI',sans-serif;--pad:3.4rem
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fonte);background:var(--bg);color:var(--ink);line-height:1.65;overflow-x:hidden}
+.ic{width:1em;height:1em;vertical-align:-.15em}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.on{opacity:1;transform:none}
+.topo{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 1.4rem;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--borda)}
+.topo b{font-size:1rem}
+.topo b i{font-style:italic;color:var(--p)}
+.nav{display:flex;gap:1rem;flex-wrap:wrap}
+.nav a{font-size:.8rem;font-weight:700;color:var(--mut);text-decoration:none}
+.nav a:hover{color:var(--p)}
+.menuBtn{display:none;background:none;border:0;padding:.4rem;cursor:pointer;color:var(--ink)}
+.menuBtn svg{width:1.5rem;height:1.5rem;display:block}
+@media(max-width:860px){
+  .menuBtn{display:block;order:2}
+  .topo .cta{display:none}
+  .nav{position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:#fff;border-bottom:1px solid var(--borda);box-shadow:0 18px 40px rgba(0,0,0,.12);max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .nav.aberta{max-height:22rem}
+  .nav a{padding:.95rem 1.4rem;border-top:1px solid var(--borda);font-size:.95rem}
+}
+.topo .cta{font-size:.86rem;font-weight:800;color:var(--btn);background:linear-gradient(120deg,var(--p),var(--a));padding:.55rem 1.1rem;border-radius:999px;text-decoration:none}
+section{padding:var(--pad) 1.5rem;max-width:66rem;margin:0 auto}
+h2{font-size:clamp(1.7rem,3.4vw,2.5rem);letter-spacing:-.02em}
+.chamada{color:var(--mut);margin:.7rem 0 2.2rem;max-width:52ch}
+.kicker{display:inline-flex;align-items:center;gap:.55rem;color:var(--p);border:1px solid var(--pBorda);background:var(--pSuave);border-radius:999px;padding:.45rem 1.05rem;font-size:.74rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.kicker i{width:.45rem;height:.45rem;border-radius:50%;background:var(--p)}
+.cta{display:inline-flex;align-items:center;gap:.55rem;font-weight:800;color:var(--btn);background:linear-gradient(120deg,var(--p),var(--a));padding:.95rem 1.6rem;border-radius:999px;text-decoration:none;box-shadow:0 14px 34px #c5a88044}
+.heroClaro{padding:4.5rem 1.5rem 5.5rem}
+.heroGrid{max-width:66rem;margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;gap:3.2rem;align-items:center}
+h1{font-size:clamp(2.4rem,5.6vw,4.2rem);line-height:1.04;letter-spacing:-.03em;margin:1.2rem 0 0;max-width:18ch}
+h1 em{font-style:italic;color:var(--p)}
+.sub{color:var(--mut);font-size:1.06rem;margin:1.2rem 0 2rem;max-width:46ch}
+.selos{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:1.6rem;color:var(--mut);font-size:.9rem}
+.selos span{display:inline-flex;align-items:center;gap:.45rem}
+.heroFoto{border-radius:24px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.16);min-height:400px;background:var(--card)}
+.heroFoto img{width:100%;height:100%;object-fit:cover;display:block}
+.heroEscuro{position:relative;min-height:88vh;display:flex;align-items:center;padding:0}
+.heroFundo{position:absolute;inset:0}
+.heroFundo img{width:100%;height:100%;object-fit:cover}
+.heroEscuro::before{content:"";position:absolute;inset:0;background:linear-gradient(#1a140eee,#1a140ef5)}
+.heroConteudo{position:relative;z-index:1;max-width:60rem;margin:0 auto;padding:9rem 1.5rem 5rem;text-align:center;color:#f2efe9}
+.heroConteudo .kicker{color:var(--a);border-color:#00000066;background:#c5a88026}
+.heroConteudo h1{margin:1.4rem auto 0;max-width:16ch;color:#fff;font-size:clamp(2.8rem,6.4vw,4.6rem)}
+.heroConteudo h1 em{color:var(--a)}
+.heroConteudo .sub{color:rgba(242,239,233,.85);margin:1.3rem auto 0}
+.heroBotoes{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:1.8rem}
+.ctaGhost{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.30);box-shadow:none}
+.atributos{display:flex;flex-wrap:wrap;justify-content:center;gap:1.6rem;margin-top:2.4rem;color:rgba(242,239,233,.85);font-size:.86rem;font-weight:600}
+.atributos span{display:inline-flex;align-items:center;gap:.5rem}
+.atributos .ic{color:var(--a)}
+.acaoTrio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;max-width:36rem;margin:2.6rem auto 0}
+.acaoTrio a{display:flex;flex-direction:column;gap:.3rem;align-items:center;padding:1.15rem .8rem;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);color:#fff;text-decoration:none;font-weight:800;font-size:.95rem;transition:transform .25s ease,background .25s ease}
+.acaoTrio a small{font-weight:500;font-size:.74rem;color:rgba(242,239,233,.72)}
+.acaoTrio a:hover{transform:translateY(-3px);background:rgba(255,255,255,.14)}
+.acaoTrio .ic{width:1.35rem;height:1.35rem;color:var(--a)}
+.gradeCatalogo{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
+.cartao{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:1.4rem;display:flex;flex-direction:column;gap:.5rem;box-shadow:0 6px 24px rgba(0,0,0,.05);transition:transform .25s ease,box-shadow .25s ease}
+.cartao:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.10)}
+.cartaoIco .ic{width:1.7rem;height:1.7rem;color:var(--p)}
+.cartao h3{font-size:1.12rem}
+.cartao p{color:var(--mut);font-size:.94rem;flex:1}
+.precoTag{align-self:flex-start;font-size:1.02rem;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.cartao .ctaCard{margin-top:.5rem;display:inline-flex;align-items:center;justify-content:center;gap:.45rem;font-size:.82rem;font-weight:800;color:var(--btn);background:var(--p);border-radius:10px;padding:.6rem .9rem;text-decoration:none}
+.notaCatalogo{margin-top:1.2rem;color:var(--mut);font-size:.9rem}
+.galeria{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.galeria figure{border-radius:18px;overflow:hidden;background:var(--card)}
+.galeria img{width:100%;height:210px;object-fit:cover;display:block}
+.ratingBox{display:flex;gap:1.4rem;align-items:center;background:var(--card);border:1px solid var(--borda);border-radius:20px;padding:1.6rem;max-width:26rem}
+.ratingNota{font-size:2.8rem;font-weight:800;color:var(--p)}
+.ratingEstrelas .ic{color:#000000;width:1.05rem;height:1.05rem}
+.localBox{display:flex;gap:1.2rem;align-items:flex-start;background:var(--card);border:1px solid var(--borda);border-radius:20px;padding:1.7rem;max-width:34rem}
+.localIco .ic{width:1.6rem;height:1.6rem;color:var(--p)}
+.localEnd{font-size:1.05rem}
+.linkMapa{display:inline-block;margin-top:.7rem;font-weight:800;color:var(--p);text-decoration:none;border-bottom:2px solid var(--pBorda)}
+#form{max-width:30rem;display:grid;gap:1rem}
+.campo{display:grid;gap:.35rem}
+.campo span{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.campo input,.campo select,.campo textarea{background:#fff;border:1px solid var(--borda);border-radius:12px;padding:.85rem 1rem;color:var(--ink);font-size:.98rem;outline:none;font-family:inherit;transition:border .2s,box-shadow .2s}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--pSuave)}
+.botaoAgendar{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;font-weight:800;color:var(--btn);background:linear-gradient(120deg,var(--p),var(--a));border:0;padding:1rem 1.6rem;border-radius:999px;font-size:1rem;cursor:pointer}
+.avisoEnvio{color:var(--mut);font-size:.85rem}
+.notaEquipe{color:var(--mut);max-width:52ch}
+details{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:1.1rem 1.3rem;margin-bottom:.8rem;max-width:46rem}
+summary{font-weight:800;cursor:pointer}
+details p{color:var(--mut);margin-top:.6rem}
+@media(max-width:860px){.heroGrid{grid-template-columns:1fr;gap:2.2rem}.heroFoto{min-height:280px}.acaoTrio{grid-template-columns:1fr;max-width:22rem}.nav{display:none}}
+@media(max-width:640px){section{padding:2.6rem 1.2rem}}
+</style></head>
+<body>
+<nav class="topo"><b>Barbearia Navalha de <i>Ouro</i></b><div class="nav" id="nav"><a href="#inicio">Início</a><a href="#sobre">Sobre Nós</a><a href="#servicos">Serviços</a><a href="#galeria">Galeria</a><a href="#agendar">Agendamento</a><a #inicio>Depoimentos</a><a href="#faq">FAQ</a></div><a class="cta" href="#agendar">Agendar agora</a><button class="menuBtn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></nav>
+
+<header class="hero heroEscuro" id="inicio">
+  <div class="heroFundo" aria-hidden="true"><img src="https://images.pexels.com/photos/7447144/pexels-photo-7447144.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="" onerror="this.style.display='none'"></div>
+  <div class="heroConteudo">
+    <span class="kicker reveal"><i></i>Barbearia premium em Luanda</span>
+    <h1 class="reveal">Barbearia Navalha de <em>Ouro</em></h1>
+    <p class="sub reveal">Cortes modernos, barba perfeita e cuidado masculino em ambiente acolhedor</p>
+    <div class="heroBotoes reveal">
+      <a class="cta" href="#agendar"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg> Agendar agora</a>
+      <a class="cta ctaGhost" #inicio>Ver serviços</a>
+    </div>
+    <div class="atributos reveal"><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Qualidade comprovada</span><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Atendimento ágil</span><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Rua da Missão 45, Cazenga, Luanda</span><span><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg> 4.8 no mapa</span></div>
+  </div>
+</header>
+
+<section id="sobre">
+  <h2 class="reveal">Sobre Nós</h2>
+  <p class="chamada reveal">A Barbearia Navalha de Ouro oferece um espaço dedicado ao cuidado masculino, combinando tradição e tendências atuais. Em um ambiente confortável, os clientes recebem cortes de cabelo, aparos de barba e tratamentos de pele realizados por profissionais experientes. Cada atendimento busca rapidez e qualidade, utilizando produtos selecionados para garantir resultados duradouros.</p>
+</section>
+
+<section id="servicos">
+  <h2 class="reveal">Serviços</h2>
+  <p class="chamada reveal">Como a <b>Barbearia Navalha de Ouro</b> atende você.</p>
+  <div class="gradeCatalogo">
+    <article class="cartao reveal" style="transition-delay:0ms"><div class="cartaoIco"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div><h3>Corte de cabelo</h3><p>Cortes modernos ou tradicionais realizados por barbeiros experientes</p></article><article class="cartao reveal" style="transition-delay:70ms"><div class="cartaoIco"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div><h3>Aparar e modelar barba</h3><p>Serviço rápido que deixa a barba alinhada e com aspecto saudável</p></article><article class="cartao reveal" style="transition-delay:140ms"><div class="cartaoIco"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div><h3>Cuidados com a pele masculina</h3><p>Limpeza e hidratação para uma pele fresca após o corte</p></article><article class="cartao reveal" style="transition-delay:210ms"><div class="cartaoIco"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div><h3>Penteado para eventos</h3><p>Estilização especial para casamentos, festas ou entrevistas</p></article><article class="cartao reveal" style="transition-delay:280ms"><div class="cartaoIco"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div><h3>Terapia capilar</h3><p>Tratamento de queda e fortalecimento com produtos de qualidade</p></article>
+  </div>
+</section>
+
+<section id="galeria">
+  <h2 class="reveal">Galeria</h2>
+  <div class="galeria">
+    <figure class="reveal"><img src="https://images.pexels.com/photos/7697393/pexels-photo-7697393.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Trabalho de barbearia — profissional atendendo cliente" loading="lazy" onerror="this.style.display='none'"></figure><figure class="reveal"><img src="https://images.pexels.com/photos/7447138/pexels-photo-7447138.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Trabalho de barbearia — profissional atendendo cliente" loading="lazy" onerror="this.style.display='none'"></figure><figure class="reveal"><img src="https://images.pexels.com/photos/7389079/pexels-photo-7389079.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Trabalho de barbearia — profissional atendendo cliente" loading="lazy" onerror="this.style.display='none'"></figure><figure class="reveal"><img src="https://images.pexels.com/photos/13138585/pexels-photo-13138585.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Trabalho de barbearia — profissional atendendo cliente" loading="lazy" onerror="this.style.display='none'"></figure><figure class="reveal"><img src="https://images.pexels.com/photos/7518731/pexels-photo-7518731.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Trabalho de barbearia — profissional atendendo cliente" loading="lazy" onerror="this.style.display='none'"></figure>
+  </div>
+</section>
+
+<section id="agendar">
+  <h2 class="reveal">Agendamento</h2>
+  <p class="chamada reveal">Preencha e a mensagem chega pronta no WhatsApp da <b>Barbearia Navalha de Ouro</b>.</p>
+  <form id="form" class="reveal">
+    <label class="campo"><span>Seu nome</span><input name="nome" required placeholder="Como podemos te chamar"></label>
+    <label class="campo"><span>Seu WhatsApp</span><input name="zap" type="tel" required placeholder="DDD + número"></label>
+    <label class="campo"><span>Data da visita</span><input name="data_visita" type="date" placeholder="Selecione a data desejada" required></label><label class="campo"><span>Serviço desejado</span><select name="servico"><option>Corte masculino</option><option>Aparar barba</option><option>Corte + barba</option><option>Tratamento capilar</option></select></label><label class="campo"><span>Observações</span><textarea name="observacoes" rows="3" placeholder="Alguma observação ou pedido especial?" required></textarea></label>
+    <span class="saudacaoOculta" id="saudacao" hidden>Olá! Gostaria de agendar um corte.</span>
+    <button class="botaoAgendar" type="submit"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.9 2.2z"/></svg> Enviar pelo WhatsApp</button>
+    <p class="avisoEnvio">Ao enviar, abre o seu WhatsApp com a mensagem pronta — só apertar enviar.</p>
+  </form>
+</section>
+
+<section id="reputacao">
+  <h2 class="reveal">Reputação</h2>
+  <div class="ratingBox reveal">
+    <div class="ratingNota">4.8</div>
+    <div>
+      <div class="ratingEstrelas" aria-label="4.8 de 5"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></div>
+      <p>132 avaliações de clientes do mapa</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <h2 class="reveal">FAQ</h2>
+  <details class="reveal"><summary>Preciso marcar horário para cortar o cabelo?</summary><p>Não é obrigatório, mas o agendamento garante atendimento sem espera.</p></details>
+  <details class="reveal"><summary>Quais produtos são usados nos tratamentos?</summary><p>Utilizamos marcas reconhecidas que oferecem hidratação e proteção para cabelo e pele.</p></details>
+  <details class="reveal"><summary>Quanto tempo dura um corte completo?</summary><p>Em média, o serviço leva de 30 a 45 minutos, dependendo do estilo escolhido.</p></details>
+  <details class="reveal"><summary>A barbearia aceita pagamento por cartão?</summary><p>Sim, aceitamos cartões de débito e crédito, além de dinheiro.</p></details>
+</section>
+<footer style="background:#1a140e;color:rgba(255,255,255,.78);padding:3rem 1.5rem 2rem;font-size:.9rem">
+  <div style="max-width:66rem;margin:0 auto;display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));text-align:left">
+    <div>
+      <b style="color:#fff;font-size:1.05rem">Barbearia Navalha de Ouro</b>
+      <p style="margin-top:.5rem;font-size:.85rem">barbearia — tradição e qualidade em cada atendimento.</p>
+      <a href="https://wa.me/244923000111" target="_blank" rel="noreferrer" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1rem;background:#25d366;color:#fff;font-weight:800;padding:.6rem 1.1rem;border-radius:999px;text-decoration:none"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.9 2.2z"/></svg> WhatsApp</a>
+    </div>
+    <div>
+      <b style="color:#fff">Horário de Funcionamento</b>
+      <p style="margin-top:.5rem;font-size:.85rem;line-height:1.9">Seg a Sex: 9h às 18h<br>Sábado: 9h às 14h<br>Domingo: fechado</p>
+    </div>
+    <div>
+      <b style="color:#fff">Localização</b>
+      <p style="margin-top:.5rem;font-size:.85rem">Rua da Missão 45, Cazenga, Luanda</p>
+      <a href="https://www.google.com/maps/search/?api=1&query=Barbearia%20Navalha%20de%20Ouro%20Luanda" target="_blank" rel="noreferrer" style="color:var(--a);font-weight:700;text-decoration:none">Ver no mapa</a>
+    </div>
+    <div>
+      <b style="color:#fff">Contacto</b>
+      <p style="margin-top:.5rem;font-size:.85rem;line-height:1.9">+244 923 000 111<br>WhatsApp disponível</p>
+    </div>
+  </div>
+  <p style="max-width:66rem;margin:1.6rem auto 0;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.12);font-size:.78rem;opacity:.65;text-align:center">© 2026 Barbearia Navalha de Ouro. Site criado com DFVCode.</p>
+</footer>
+<script>
+(function(){
+  var obs=new IntersectionObserver(function(entradas){entradas.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}});},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+  // Menu mobile
+  var menuBtn=document.getElementById('menuBtn'),nav=document.getElementById('nav');
+  if(menuBtn&&nav){
+    menuBtn.addEventListener('click',function(){
+      var aberta=nav.classList.toggle('aberta');
+      menuBtn.setAttribute('aria-expanded',aberta?'true':'false');
+    });
+    nav.addEventListener('click',function(ev){if(ev.target.tagName==='A'){nav.classList.remove('aberta');menuBtn.setAttribute('aria-expanded','false');}});
+  }
+  var form=document.getElementById('form');
+  if(form){
+    form.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var nome=form.nome.value.trim();
+      var zap=form.zap.value.replace(/[^\d]/g,'');
+      var campoNome=form.nome.closest('.campo');
+      var campoZap=form.zap.closest('.campo');
+      campoNome.style.borderColor='';campoZap.style.borderColor='';
+      if(nome.length<2){campoNome.style.borderColor='#c33';form.nome.focus();return;}
+      if(zap.length<8){campoZap.style.borderColor='#c33';form.zap.focus();return;}
+      var saudacao=(document.getElementById('saudacao')||{}).textContent||'Olá!';
+      var linhas=[saudacao,'Nome: '+nome,'WhatsApp: '+form.zap.value.trim()];
+      // Campos contextuais do formulário entram na mensagem (rotulo: valor).
+      var extras=form.querySelectorAll('input[name]:not([name=nome]):not([name=zap]), select[name], textarea[name]');
+      extras.forEach(function(el){
+        var v=(el.value||'').trim();
+        if(!v)return;
+        var rot=(el.closest('.campo')&&el.closest('.campo').querySelector('span'));
+        linhas.push((rot?rot.textContent+': ':'')+v);
+      });
+      var waNumero='244923000111';
+      var url='https://wa.me/'+waNumero+'?text='+encodeURIComponent(linhas.join('\n'));
+      window.open(url,'_blank');
+    });
+  }
+})();
+</script>
+</body></html>

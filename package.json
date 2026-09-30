@@ -1,0 +1,24 @@
+{
+  "name": "leadzero",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LeadZero — encontre empresas SEM SITE no Google Maps e transforme cada uma em cliente",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm run dev -w server\" \"npm run dev -w web\"",
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web",
+    "build": "npm run build -w server && npm run build -w web",
+    "start": "npm run start -w server",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
