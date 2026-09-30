@@ -19,6 +19,8 @@
     "typecheck": "npm run typecheck -w server && npm run typecheck -w web"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.3",
     "concurrently": "^9.1.2"
   }
 }
