@@ -35,7 +35,7 @@ export default function Faq() {
       <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">Perguntas frequentes</h2>
       <div className="mt-10 space-y-3">
         {FAQS.map((faq) => (
-          <details key={faq.q} className="card group p-0!">
+          <details key={faq.q} className="card-dark group p-0!">
             <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-white marker:hidden [&::-webkit-details-marker]:hidden">
               {faq.q}
               <span className="text-brand-500 transition group-open:rotate-45">＋</span>

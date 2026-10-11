@@ -70,14 +70,14 @@ export default function MeusLeadsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Meus Leads</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="text-2xl font-bold text-slate-900">Meus Leads</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Todos os leads encontrados nas suas buscas, num só lugar.
         </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex rounded-xl border border-white/10 bg-night-800/70 p-1">
+        <div className="flex rounded-xl border border-slate-200 bg-white p-1">
           {FILTROS.map((item) => (
             <button
               key={item.id}
@@ -85,7 +85,7 @@ export default function MeusLeadsPage() {
               onClick={() => setFiltro(item.id)}
               aria-pressed={filtro === item.id}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                filtro === item.id ? 'bg-brand-500/20 text-brand-400' : 'text-slate-400 hover:text-white'
+                filtro === item.id ? 'bg-brand-500/20 text-brand-700' : 'text-slate-500 hover:text-slate-900'
               }`}
             >
               {item.label}
@@ -105,21 +105,21 @@ export default function MeusLeadsPage() {
       </div>
 
       {!leads && (
-        <div className="card flex items-center gap-3 text-sm text-slate-400">
+        <div className="card flex items-center gap-3 text-sm text-slate-500">
           <Spinner /> Carregando leads…
         </div>
       )}
 
       {leads && leads.length === 0 && (
         <div className="card text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             Você ainda não tem leads — faça sua primeira busca para começar.
           </p>
         </div>
       )}
 
       {leads && leads.length > 0 && filtrados.length === 0 && (
-        <div className="card text-center text-sm text-slate-400">
+        <div className="card text-center text-sm text-slate-500">
           Nenhum lead corresponde a este filtro.
         </div>
       )}

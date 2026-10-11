@@ -72,24 +72,24 @@ export default function WebsitesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Websites</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="text-2xl font-bold text-slate-900">Websites</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Sites gerados para os seus leads — prévia, publicação e download.
         </p>
       </div>
 
       {!sites && (
-        <div className="card flex items-center gap-3 text-sm text-slate-400">
+        <div className="card flex items-center gap-3 text-sm text-slate-500">
           <Spinner /> Carregando sites…
         </div>
       )}
 
       {sites && sites.length === 0 && (
         <div className="card text-center">
-          <Icon name="layout" className="mx-auto h-8 w-8 text-slate-600" />
-          <p className="mt-3 text-sm text-slate-400">
+          <Icon name="layout" className="mx-auto h-8 w-8 text-slate-400" />
+          <p className="mt-3 text-sm text-slate-500">
             Nenhum site gerado ainda. Encontre uma empresa sem website em{' '}
-            <Link to="/dashboard/pesquisar" className="font-semibold text-brand-400 hover:text-brand-500">
+            <Link to="/dashboard/pesquisar" className="font-semibold text-brand-700 hover:text-brand-500">
               Pesquisar Leads
             </Link>{' '}
             e clique no ícone de site para criar o primeiro.
@@ -110,7 +110,7 @@ export default function WebsitesPage() {
               <div key={site.id} className="card flex flex-col gap-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate font-semibold text-white">{site.lead?.name ?? 'Lead removido'}</p>
+                    <p className="truncate font-semibold text-slate-900">{site.lead?.name ?? 'Lead removido'}</p>
                     <p className="mt-0.5 text-xs text-slate-500">Criado em {formatDate(site.criadoEm)}</p>
                   </div>
                   <span
@@ -129,7 +129,7 @@ export default function WebsitesPage() {
                     href={`${API_URL}${site.urlPublica}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 truncate rounded-lg bg-night-800/70 px-3 py-2 text-xs font-medium text-brand-400 transition hover:text-brand-500"
+                    className="flex items-center gap-1.5 truncate rounded-lg bg-slate-100 px-3 py-2 text-xs font-medium text-brand-700 transition hover:text-brand-500"
                   >
                     <Icon name="globe" className="h-3.5 w-3.5 shrink-0" />
                     <span className="truncate">{API_URL}{site.urlPublica}</span>
@@ -137,7 +137,7 @@ export default function WebsitesPage() {
                   </a>
                 )}
 
-                <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-white/10 pt-3">
+                <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-slate-200 pt-3">
                   <button
                     type="button"
                     onClick={() => setPreview(site)}
@@ -148,7 +148,7 @@ export default function WebsitesPage() {
                   <button
                     type="button"
                     onClick={() => void handleDownload(site)}
-                    className="rounded-lg border border-white/15 bg-white/5 p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                    className="rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
                     aria-label="Baixar ZIP"
                   >
                     <Icon name="download" className="h-4 w-4" />
@@ -158,7 +158,7 @@ export default function WebsitesPage() {
                       href={`https://wa.me/${numero}?text=${mensagem}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-lg bg-brand-500/15 p-2 text-brand-400 transition hover:bg-brand-500/25"
+                      className="rounded-lg bg-brand-500/15 p-2 text-brand-700 transition hover:bg-brand-500/25"
                       aria-label="Enviar por WhatsApp"
                     >
                       <Icon name="message" className="h-4 w-4" />
@@ -191,15 +191,15 @@ export default function WebsitesPage() {
           onClick={() => setPreview(null)}
         >
           <div
-            className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-night-900"
+            className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
             onClick={(evento) => evento.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
-              <p className="font-semibold text-white">{preview.lead?.name ?? 'Prévia'}</p>
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+              <p className="font-semibold text-slate-900">{preview.lead?.name ?? 'Prévia'}</p>
               <button
                 type="button"
                 onClick={() => setPreview(null)}
-                className="rounded-lg p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                className="rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
                 aria-label="Fechar"
               >
                 <Icon name="x" className="h-4 w-4" />

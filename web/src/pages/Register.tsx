@@ -50,7 +50,7 @@ export default function Register() {
         <div className="mb-8 flex justify-center">
           <Logo />
         </div>
-        <div className="card border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
+        <div className="card-dark border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
           <h1 className="text-2xl font-bold text-white">Criar conta grátis</h1>
           <p className="mt-1 text-sm text-slate-400">
             1 busca + 1 site grátis para encontrar seus primeiros clientes sem site.
@@ -66,7 +66,7 @@ export default function Register() {
                 type="email"
                 required
                 autoComplete="email"
-                className="input"
+                className="input-dark"
                 placeholder="voce@agencia.com"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
@@ -82,7 +82,7 @@ export default function Register() {
                 required
                 minLength={6}
                 autoComplete="new-password"
-                className="input"
+                className="input-dark"
                 placeholder="mínimo 6 caracteres"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}

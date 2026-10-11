@@ -30,10 +30,10 @@ export default function LeadsTable({ leads, selected, onToggle, onToggleAll, onC
   const allSelected = leads.length > 0 && selected.size === leads.length;
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-white/10">
+    <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
       <table className="w-full min-w-[720px] text-left text-sm">
         <thead>
-          <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
+          <tr className="border-b border-slate-200 bg-slate-100 text-xs uppercase tracking-wide text-slate-500">
             <th className="w-10 px-4 py-3">
               <input
                 type="checkbox"
@@ -51,11 +51,11 @@ export default function LeadsTable({ leads, selected, onToggle, onToggleAll, onC
             <th className="px-4 py-3 text-right font-medium">Ações</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+        <tbody className="divide-y divide-slate-100">
           {leads.map((lead) => {
             const meta = STATUS_META[lead.status];
             return (
-              <tr key={lead.id} className={`transition hover:bg-white/[0.04] ${meta.rowTone}`}>
+              <tr key={lead.id} className={`transition hover:bg-slate-50 ${meta.rowTone}`}>
                 <td className="px-4 py-3">
                   <input
                     type="checkbox"
@@ -66,12 +66,12 @@ export default function LeadsTable({ leads, selected, onToggle, onToggleAll, onC
                   />
                 </td>
                 <td className="max-w-[220px] px-4 py-3">
-                  <span className="block truncate font-medium text-white">{lead.name}</span>
+                  <span className="block truncate font-medium text-slate-900">{lead.name}</span>
                   {lead.seen && <span className="text-xs text-accent-500">vista anteriormente</span>}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-slate-200">{lead.phone ?? '—'}</span>
+                    <span className="text-slate-700">{lead.phone ?? '—'}</span>
                     {lead.phone && pareceWhatsApp(lead.phone) && (
                       <span
                         className="rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-400 ring-1 ring-inset ring-emerald-500/30"
@@ -84,7 +84,7 @@ export default function LeadsTable({ leads, selected, onToggle, onToggleAll, onC
                       <button
                         type="button"
                         onClick={() => void copyPhone(lead.phone)}
-                        className="rounded-md border border-white/10 px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 transition hover:border-brand-500/40 hover:text-brand-500"
+                        className="rounded-md border border-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500 transition hover:border-brand-500/40 hover:text-brand-700"
                         title="Copiar telefone"
                       >
                         copiar
@@ -93,14 +93,14 @@ export default function LeadsTable({ leads, selected, onToggle, onToggleAll, onC
                   </div>
                 </td>
                 <td className="max-w-[240px] px-4 py-3">
-                  <span className="block truncate text-slate-400" title={lead.address ?? ''}>
+                  <span className="block truncate text-slate-500" title={lead.address ?? ''}>
                     {lead.address ?? '—'}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-slate-300">
+                <td className="whitespace-nowrap px-4 py-3 text-slate-600">
                   {lead.rating == null && lead.reviews == null ? (
                     <span
-                      className="text-slate-600"
+                      className="text-slate-400"
                       title="A fonte gratuita (OpenStreetMap) não tem avaliações — elas aparecem quando a busca usa a chave do Google Places."
                     >
                       n/d
@@ -123,7 +123,7 @@ export default function LeadsTable({ leads, selected, onToggle, onToggleAll, onC
                       <button
                         type="button"
                         onClick={() => onCriarSite(lead)}
-                        className="inline-flex items-center gap-1 rounded-md bg-brand-500/15 px-2 py-1 text-[11px] font-bold text-brand-500 transition hover:bg-brand-500/25"
+                        className="inline-flex items-center gap-1 rounded-md bg-brand-500/15 px-2 py-1 text-[11px] font-bold text-brand-700 transition hover:bg-brand-500/25"
                         title="Gerar landing page premium para este lead"
                       >
                         <Icon name="sparkles" className="h-3 w-3" />
@@ -143,7 +143,7 @@ export default function LeadsTable({ leads, selected, onToggle, onToggleAll, onC
                     {lead.phone && (
                       <a
                         href={`tel:${lead.phone.replace(/\s/g, '')}`}
-                        className="text-xs text-slate-400 hover:text-white"
+                        className="text-xs text-slate-500 hover:text-slate-900"
                       >
                         ligar
                       </a>

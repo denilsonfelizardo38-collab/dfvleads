@@ -46,7 +46,7 @@ export default function ResetPasswordConfirm() {
         <div className="mb-8 flex justify-center">
           <Logo />
         </div>
-        <div className="card border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
+        <div className="card-dark border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
           <h1 className="text-2xl font-bold text-white">Definir nova senha</h1>
 
           {done ? (
@@ -65,7 +65,7 @@ export default function ResetPasswordConfirm() {
                   required
                   minLength={6}
                   autoComplete="new-password"
-                  className="input"
+                  className="input-dark"
                   placeholder="mínimo 6 caracteres"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}

@@ -43,7 +43,7 @@ export default function SearchForm({
     <form onSubmit={handleSubmit} className="card">
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <label htmlFor="city" className="mb-1.5 block text-sm font-medium text-slate-300">
+          <label htmlFor="city" className="mb-1.5 block text-sm font-medium text-slate-600">
             Cidade / Bairro
           </label>
           <input
@@ -87,7 +87,7 @@ export default function SearchForm({
         </div>
 
         <div>
-          <label htmlFor="niche" className="mb-1.5 block text-sm font-medium text-slate-300">
+          <label htmlFor="niche" className="mb-1.5 block text-sm font-medium text-slate-600">
             Nicho de negócio
           </label>
           <input
@@ -119,14 +119,14 @@ export default function SearchForm({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-slate-300 select-none">
+        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-slate-600 select-none">
           <button
             type="button"
             role="switch"
             aria-checked={apenasSemSite}
             onClick={() => onToggleApenasSemSite(!apenasSemSite)}
             className={`relative h-5 w-9 shrink-0 rounded-full transition ${
-              apenasSemSite ? 'bg-brand-500' : 'bg-white/15'
+              apenasSemSite ? 'bg-brand-500' : 'bg-slate-200'
             }`}
           >
             <span
@@ -142,7 +142,7 @@ export default function SearchForm({
           <button
             type="button"
             onClick={() => setFiltrosAbertos((valor) => !valor)}
-            className="flex items-center gap-1.5 text-sm font-medium text-slate-400 transition hover:text-white"
+            className="flex items-center gap-1.5 text-sm font-medium text-slate-500 transition hover:text-slate-900"
           >
             <Icon name="filter" className="h-4 w-4" />
             Filtros avançados
@@ -173,11 +173,11 @@ export default function SearchForm({
       </div>
 
       {filtrosAbertos && (
-        <div className="mt-4 border-t border-white/10 pt-4">
+        <div className="mt-4 border-t border-slate-200 pt-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="radius" className="mb-1.5 block text-sm font-medium text-slate-300">
-                Raio de busca (km) <span className="text-slate-600">opcional</span>
+              <label htmlFor="radius" className="mb-1.5 block text-sm font-medium text-slate-600">
+                Raio de busca (km) <span className="text-slate-400">opcional</span>
               </label>
               <input
                 id="radius"
@@ -191,7 +191,7 @@ export default function SearchForm({
               />
             </div>
             <p className="self-end pb-2 text-xs text-slate-500">
-              Só entram empresas <span className="text-slate-300">com telefone</span> e sem site ·
+              Só entram empresas <span className="text-slate-600">com telefone</span> e sem site ·
               cada busca consome 1 crédito · exportar o CSV consome 3 créditos
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function SearchForm({
       )}
       {!filtrosAbertos && (
         <p className="mt-4 text-xs text-slate-500">
-          Só entram empresas <span className="text-slate-300">com telefone</span> e sem site · cada
+          Só entram empresas <span className="text-slate-600">com telefone</span> e sem site · cada
           busca consome 1 crédito · exportar o CSV consome 3 créditos
         </p>
       )}

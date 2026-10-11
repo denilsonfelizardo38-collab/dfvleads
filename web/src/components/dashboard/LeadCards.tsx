@@ -49,7 +49,7 @@ export default function LeadCards({
           <div
             key={lead.id}
             className={`card flex flex-col gap-3 transition ${
-              marcado ? 'border-brand-500/50 bg-brand-500/5' : 'hover:border-white/20'
+              marcado ? 'border-brand-500/50 bg-brand-500/5' : 'hover:border-slate-300'
             }`}
           >
             <div className="flex items-start gap-3">
@@ -66,7 +66,7 @@ export default function LeadCards({
                 {initials(lead.name)}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-white">{lead.name}</p>
+                <p className="truncate font-semibold text-slate-900">{lead.name}</p>
                 <span
                   className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold ${meta.chip}`}
                 >
@@ -96,7 +96,7 @@ export default function LeadCards({
               </p>
             </div>
 
-            <div className="mt-auto flex items-center gap-2 border-t border-white/10 pt-3">
+            <div className="mt-auto flex items-center gap-2 border-t border-slate-200 pt-3">
               <button
                 type="button"
                 onClick={() => onOpenDetail(lead)}
@@ -108,7 +108,7 @@ export default function LeadCards({
                 <button
                   type="button"
                   onClick={(evento) => void copyPhone(evento, lead.phone)}
-                  className="rounded-lg border border-white/15 bg-white/5 p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                  className="rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
                   aria-label="Copiar telefone"
                 >
                   <Icon name="phone" className="h-4 w-4" />
@@ -118,7 +118,7 @@ export default function LeadCards({
                 <button
                   type="button"
                   onClick={() => onCriarSite(lead)}
-                  className="rounded-lg bg-brand-500/15 p-2 text-brand-400 transition hover:bg-brand-500/25"
+                  className="rounded-lg bg-brand-500/15 p-2 text-brand-700 transition hover:bg-brand-500/25"
                   aria-label="Criar site"
                 >
                   <Icon name="sparkles" className="h-4 w-4" />

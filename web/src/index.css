@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Escala neutra escura — visual DFVLeads (fundo quase preto, cartões acinzentados) */
+  /* Escala neutra escura — sidebar, landing e auth (fundo quase preto) */
   --color-night-950: #0a0a0c;
   --color-night-900: #101013;
   --color-night-800: #17171a;
@@ -11,6 +11,7 @@
   --color-brand-400: #4ade80;
   --color-brand-500: #22c55e;
   --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
   /* Detalhe secundário: verde claro */
   --color-accent-500: #4ade80;
 }
@@ -44,19 +45,35 @@
 }
 
 @layer utilities {
+  /* Vidro escuro (landing) e claro (painel) */
   .glass {
     @apply border border-white/10 bg-white/5 backdrop-blur-sm;
   }
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-night-950 transition hover:bg-brand-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 disabled:cursor-not-allowed disabled:opacity-50;
+  .glass-light {
+    @apply border border-slate-200 bg-white/80 backdrop-blur-sm;
   }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  /* Secundário claro (painel) e escuro (landing) */
   .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-secondary-dark {
     @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 disabled:cursor-not-allowed disabled:opacity-50;
   }
+  /* Inputs: claro (painel) por omissão, escuro (auth) via .input-dark */
   .input {
+    @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+  }
+  .input-dark {
     @apply w-full rounded-xl border border-white/10 bg-night-900 px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20;
   }
+  /* Cartões: claro (painel) por omissão, escuro (landing/auth) via .card-dark */
   .card {
+    @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/60;
+  }
+  .card-dark {
     @apply rounded-2xl border border-white/10 bg-night-800 p-5 shadow-lg shadow-black/30;
   }
 }

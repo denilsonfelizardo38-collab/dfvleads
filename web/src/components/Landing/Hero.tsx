@@ -50,7 +50,7 @@ export default function Hero() {
               Vamos Começar
               <Icon name="arrow-right" className="h-4 w-4" />
             </Link>
-            <a href="#como-funciona" className="btn-secondary w-full sm:w-auto">
+            <a href="#como-funciona" className="btn-secondary-dark w-full sm:w-auto">
               Ver como funciona
             </a>
           </div>
@@ -67,7 +67,7 @@ export default function Hero() {
 
         {/* mockup: mapa com pins + etiquetas flutuantes */}
         <div className="animate-fade-up animate-fade-up-2 relative mx-auto mt-16 max-w-4xl">
-          <div className="card overflow-hidden p-0!">
+          <div className="card-dark overflow-hidden p-0!">
             <div className="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-2.5">
               <span className="h-2.5 w-2.5 rounded-full bg-brand-500/80" />
               <span className="h-2.5 w-2.5 rounded-full bg-white/20" />

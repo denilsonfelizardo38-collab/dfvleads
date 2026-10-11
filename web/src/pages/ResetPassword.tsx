@@ -38,7 +38,7 @@ export default function ResetPassword() {
         <div className="mb-8 flex justify-center">
           <Logo />
         </div>
-        <div className="card border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
+        <div className="card-dark border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
           <h1 className="text-2xl font-bold text-white">Recuperar senha</h1>
           <p className="mt-1 text-sm text-slate-400">
             Enviaremos um link de redefinição para o seu email.
@@ -59,7 +59,7 @@ export default function ResetPassword() {
                   type="email"
                   required
                   autoComplete="email"
-                  className="input"
+                  className="input-dark"
                   placeholder="voce@agencia.com"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}

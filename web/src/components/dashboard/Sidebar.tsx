@@ -44,9 +44,14 @@ export default function Sidebar({ isAdmin = false, profile = null }: SidebarProp
   const pesquisasTotal = planoAtivo?.pesquisas ?? 50;
   const rotuloPlano = planoAtivo ? planoAtivo.nome : 'Plano Gratuito';
 
-  function itemClass(isActive: boolean): string {
+  function itemClass(isActive: boolean, claro = false): string {
+    if (isActive) {
+      return 'flex shrink-0 items-center gap-3 rounded-xl bg-brand-500 px-3.5 py-2.5 text-sm font-medium text-night-950 transition';
+    }
     return `flex shrink-0 items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
-      isActive ? 'bg-brand-500/15 text-brand-400' : 'text-slate-400 hover:bg-white/5 hover:text-white'
+      claro
+        ? 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+        : 'text-slate-400 hover:bg-white/5 hover:text-white'
     }`;
   }
 
@@ -105,15 +110,15 @@ export default function Sidebar({ isAdmin = false, profile = null }: SidebarProp
       </nav>
 
       {/* ── Mobile: barra horizontal rolável no topo ────────────────── */}
-      <nav className="flex gap-1 overflow-x-auto border-b border-white/10 bg-night-900/80 p-2 md:hidden">
+      <nav className="flex gap-1 overflow-x-auto border-b border-slate-200 bg-white p-2 md:hidden">
         {LINKS.map((link) => (
-          <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => itemClass(isActive)}>
+          <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => itemClass(isActive, true)}>
             <Icon name={link.icon} className="h-4 w-4 shrink-0" />
             {link.label}
           </NavLink>
         ))}
         {links.map((link) => (
-          <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => itemClass(isActive)}>
+          <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => itemClass(isActive, true)}>
             <Icon name={link.icon} className="h-4 w-4 shrink-0" />
             {link.label}
           </NavLink>

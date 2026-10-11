@@ -37,7 +37,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col bg-[#f4f6f4] md:flex-row">
       <Sidebar isAdmin={profile?.isAdmin ?? false} profile={profile} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Header profile={profile} />

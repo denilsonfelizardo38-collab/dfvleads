@@ -41,7 +41,7 @@ export default function Login() {
         <div className="mb-8 flex justify-center">
           <Logo />
         </div>
-        <div className="card border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
+        <div className="card-dark border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
           <h1 className="text-2xl font-bold text-white">Entrar</h1>
           <p className="mt-1 text-sm text-slate-400">
             Entre no seu painel de leads e sites.
@@ -57,7 +57,7 @@ export default function Login() {
                 type="email"
                 required
                 autoComplete="email"
-                className="input"
+                className="input-dark"
                 placeholder="voce@agencia.com"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
@@ -72,7 +72,7 @@ export default function Login() {
                 type="password"
                 required
                 autoComplete="current-password"
-                className="input"
+                className="input-dark"
                 placeholder="••••••••"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}

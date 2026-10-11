@@ -77,8 +77,8 @@ export default function TemplatesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Templates</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="text-2xl font-bold text-slate-900">Templates</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Estilos prontos por tipo de negócio — a IA adapta o template aos dados reais de cada lead.
         </p>
       </div>
@@ -93,7 +93,7 @@ export default function TemplatesPage() {
             className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
               categoria === item
                 ? 'bg-brand-500 text-night-950'
-                : 'border border-white/10 bg-white/5 text-slate-400 hover:text-white'
+                : 'border border-slate-200 bg-slate-100 text-slate-500 hover:text-slate-900'
             }`}
           >
             {item}
@@ -126,8 +126,8 @@ export default function TemplatesPage() {
 
             <div className="flex flex-1 flex-col gap-2 p-4 pt-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-white">{template.nome}</h3>
-                <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-bold text-slate-400">
+                <h3 className="font-bold text-slate-900">{template.nome}</h3>
+                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">
                   {template.categoria}
                 </span>
               </div>
@@ -145,9 +145,9 @@ export default function TemplatesPage() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-brand-500/30 bg-brand-500/5 p-4 text-sm text-slate-300">
+      <div className="rounded-2xl border border-brand-500/30 bg-brand-500/5 p-4 text-sm text-slate-600">
         <p className="flex items-start gap-2">
-          <Icon name="sparkles" className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
+          <Icon name="sparkles" className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" />
           <span>
             Não precisa escolher template manualmente: ao gerar o site de um lead, a IA analisa o
             negócio e aplica automaticamente o layout mais indicado para o nicho.
