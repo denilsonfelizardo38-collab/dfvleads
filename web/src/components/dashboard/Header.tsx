@@ -57,7 +57,7 @@ export default function Header({ profile }: HeaderProps) {
   const nome = (profile?.nome ?? '').trim() || profile?.email?.split('@')[0] || '—';
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 shadow-[0_1px_16px_rgba(15,23,42,0.06)] backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         {/* Logo apenas no mobile (desktop tem a logo na sidebar) */}
         <div className="md:hidden">
@@ -67,11 +67,11 @@ export default function Header({ profile }: HeaderProps) {
         {/* Créditos + sino + avatar */}
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           {profile?.planoInfo && (
-            <span className="hidden rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 sm:inline">
+            <span className="hidden rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 shadow-sm sm:inline">
               {profile.planoInfo.nome}
             </span>
           )}
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">
             <Icon name="credit" className="h-3.5 w-3.5 text-brand-600" />
             {profile?.credits ?? '—'}
           </span>

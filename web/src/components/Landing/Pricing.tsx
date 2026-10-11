@@ -59,7 +59,7 @@ export default function Pricing() {
     <section id="precos" className="bg-white">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
             Escolha o plano
           </h2>
           <p className="mt-3 text-slate-500">
@@ -74,7 +74,7 @@ export default function Pricing() {
               key={plan.name}
               className={`relative flex flex-col rounded-2xl border bg-white p-6 transition hover:-translate-y-1 ${
                 plan.highlight
-                  ? 'border-brand-500 shadow-xl shadow-brand-500/10 ring-1 ring-brand-500/40'
+                  ? 'border-brand-500 shadow-[0_24px_70px_-20px_rgba(34,197,94,0.45)] ring-2 ring-brand-500/50 lg:scale-[1.04]'
                   : 'border-slate-200 shadow-sm hover:border-slate-300 hover:shadow-md'
               }`}
             >

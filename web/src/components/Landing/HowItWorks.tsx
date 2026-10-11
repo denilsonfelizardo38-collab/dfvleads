@@ -34,7 +34,7 @@ export default function HowItWorks() {
     <section id="como-funciona" className="bg-white">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
             Como funciona?
           </h2>
           <p className="mt-3 text-slate-500">
@@ -46,9 +46,9 @@ export default function HowItWorks() {
           {STEPS.map((step, index) => (
             <div
               key={step.title}
-              className={`animate-fade-up animate-fade-up-${index + 1} rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-brand-500/40 hover:shadow-md`}
+              className={`animate-fade-up animate-fade-up-${index + 1} group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-500/40 hover:shadow-xl hover:shadow-brand-500/10`}
             >
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-brand-500/10 text-brand-600">
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/30 transition duration-300 group-hover:scale-110">
                 <Icon name={step.icon} className="h-6 w-6" />
               </span>
               <h3 className="mt-4 font-bold text-slate-900">{step.title}</h3>

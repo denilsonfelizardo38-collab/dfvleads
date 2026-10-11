@@ -14,6 +14,9 @@
   --color-brand-700: #15803d;
   /* Detalhe secundário: verde claro */
   --color-accent-500: #4ade80;
+  /* Tipografia premium */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -21,7 +24,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-night-950 text-slate-200 antialiased;
+    @apply bg-night-950 font-sans text-slate-200 antialiased;
   }
   ::selection {
     @apply bg-brand-500/40 text-white;
@@ -53,21 +56,21 @@
     @apply border border-slate-200 bg-white/80 backdrop-blur-sm;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand-400 to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 transition hover:-translate-y-px hover:shadow-xl hover:shadow-brand-500/30 hover:brightness-110 active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
   }
   /* Secundário claro (painel) e escuro (landing) */
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-px hover:bg-slate-50 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
   }
   .btn-secondary-dark {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:-translate-y-px hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
   }
   /* Inputs: claro (painel) por omissão, escuro (auth) via .input-dark */
   .input {
-    @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+    @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 transition focus:border-brand-500/60 focus:outline-none focus:ring-4 focus:ring-brand-500/15;
   }
   .input-dark {
-    @apply w-full rounded-xl border border-white/10 bg-night-900 px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+    @apply w-full rounded-xl border border-white/10 bg-night-900 px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 transition focus:border-brand-500/60 focus:outline-none focus:ring-4 focus:ring-brand-500/15;
   }
   /* Cartões: claro (painel) por omissão, escuro (landing/auth) via .card-dark */
   .card {
@@ -75,6 +78,26 @@
   }
   .card-dark {
     @apply rounded-2xl border border-white/10 bg-night-800 p-5 shadow-lg shadow-black/30;
+  }
+  /* Elevação premium para cartões interativos */
+  .card-hover {
+    @apply transition duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/[0.07];
+  }
+  /* Padrão de pontos para fundos escuros (hero) */
+  .bg-grid-dark {
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
+    background-size: 26px 26px;
+  }
+  /* Esqueleto com brilho para carregamentos */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-slate-200) 25%,
+      var(--color-slate-100) 50%,
+      var(--color-slate-200) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
   }
 }
 
@@ -97,3 +120,26 @@
 .animate-fade-up-2 { animation-delay: 0.15s; }
 .animate-fade-up-3 { animation-delay: 0.25s; }
 .animate-fade-up-4 { animation-delay: 0.35s; }
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}

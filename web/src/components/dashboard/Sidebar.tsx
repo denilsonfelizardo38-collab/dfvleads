@@ -46,7 +46,7 @@ export default function Sidebar({ isAdmin = false, profile = null }: SidebarProp
 
   function itemClass(isActive: boolean, claro = false): string {
     if (isActive) {
-      return 'flex shrink-0 items-center gap-3 rounded-xl bg-brand-500 px-3.5 py-2.5 text-sm font-medium text-night-950 transition';
+      return 'flex shrink-0 items-center gap-3 rounded-xl bg-gradient-to-r from-brand-400 to-brand-500 px-3.5 py-2.5 text-sm font-semibold text-night-950 shadow-md shadow-brand-500/25 transition';
     }
     return `flex shrink-0 items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
       claro
@@ -91,16 +91,18 @@ export default function Sidebar({ isAdmin = false, profile = null }: SidebarProp
 
         {/* Cartão de plano + upgrade (rodapé do menu) */}
         <div className="border-t border-white/10 p-3">
-          <div className="rounded-xl border border-white/10 bg-night-800/70 p-3.5">
-            <p className="text-xs font-bold text-white">{rotuloPlano}</p>
-            <p className="mt-0.5 text-xs text-slate-500">
-              {pesquisasUsadas} / {pesquisasTotal} pesquisas
-            </p>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full rounded-full bg-brand-500 transition-all"
-                style={{ width: `${Math.min(100, (pesquisasUsadas / Math.max(1, pesquisasTotal)) * 100)}%` }}
-              />
+          <div className="rounded-xl bg-gradient-to-br from-brand-500/60 via-white/10 to-transparent p-px shadow-lg shadow-black/30">
+            <div className="rounded-[11px] bg-night-800 p-3.5">
+              <p className="text-xs font-bold text-white">{rotuloPlano}</p>
+              <p className="mt-0.5 text-xs text-slate-500">
+                {pesquisasUsadas} / {pesquisasTotal} pesquisas
+              </p>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-brand-600 to-brand-400 shadow-[0_0_8px_rgba(34,197,94,0.7)] transition-all"
+                  style={{ width: `${Math.min(100, (pesquisasUsadas / Math.max(1, pesquisasTotal)) * 100)}%` }}
+                />
+              </div>
             </div>
           </div>
           <NavLink to="/dashboard/planos" className="btn-primary mt-3 w-full">

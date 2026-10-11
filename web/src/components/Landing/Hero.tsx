@@ -22,7 +22,8 @@ export default function Hero() {
     <section id="topo" className="relative overflow-hidden">
       {/* brilhos de fundo */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-brand-500/15 blur-3xl" />
+        <div className="bg-grid-dark absolute inset-0 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,black,transparent)]" />
+        <div className="absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-brand-500/20 blur-3xl" />
         <div className="absolute top-24 right-0 h-80 w-80 rounded-full bg-brand-500/10 blur-3xl" />
       </div>
 
@@ -33,7 +34,7 @@ export default function Hero() {
             Para Programadores e Vibe Coders
           </span>
 
-          <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">
+          <h1 className="font-display mt-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">
             Encontre empresas{' '}
             <span className="bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">
               que precisam de um site.
@@ -67,7 +68,8 @@ export default function Hero() {
 
         {/* mockup: mapa com pins + etiquetas flutuantes */}
         <div className="animate-fade-up animate-fade-up-2 relative mx-auto mt-16 max-w-4xl">
-          <div className="card-dark overflow-hidden p-0!">
+          <div aria-hidden className="absolute -inset-6 rounded-[2rem] bg-gradient-to-r from-brand-500/20 via-brand-500/5 to-transparent blur-2xl" />
+          <div className="card-dark relative overflow-hidden p-0! ring-1 ring-white/10">
             <div className="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-2.5">
               <span className="h-2.5 w-2.5 rounded-full bg-brand-500/80" />
               <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
@@ -154,10 +156,11 @@ export default function Hero() {
           </div>
 
           {/* etiquetas flutuantes */}
-          {BADGES.map((badge) => (
+          {BADGES.map((badge, i) => (
             <div
               key={badge.label}
-              className={`absolute hidden items-center gap-2 rounded-xl border border-white/10 bg-white px-3.5 py-2.5 text-sm font-bold text-slate-900 shadow-xl shadow-black/40 sm:flex ${badge.pos}`}
+              style={{ animationDelay: `${i * 1.2}s` }}
+              className={`animate-float absolute hidden items-center gap-2 rounded-xl border border-white/20 bg-white/95 px-3.5 py-2.5 text-sm font-bold text-slate-900 shadow-2xl shadow-brand-500/10 ring-1 ring-black/5 backdrop-blur sm:flex ${badge.pos}`}
             >
               <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-500/15 text-brand-600">
                 <Icon name={badge.icon} className="h-4 w-4" />

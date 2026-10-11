@@ -41,8 +41,8 @@ export default function Login() {
         <div className="mb-8 flex justify-center">
           <Logo />
         </div>
-        <div className="card-dark border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
-          <h1 className="text-2xl font-bold text-white">Entrar</h1>
+        <div className="card-dark border-white/10 bg-night-900/80 p-6! shadow-2xl shadow-black/50 ring-1 ring-white/10 backdrop-blur sm:p-7!">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-white">Entrar</h1>
           <p className="mt-1 text-sm text-slate-400">
             Entre no seu painel de leads e sites.
           </p>

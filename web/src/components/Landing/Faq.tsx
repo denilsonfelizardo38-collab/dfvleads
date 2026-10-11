@@ -35,10 +35,10 @@ export default function Faq() {
       <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">Perguntas frequentes</h2>
       <div className="mt-10 space-y-3">
         {FAQS.map((faq) => (
-          <details key={faq.q} className="card-dark group p-0!">
+          <details key={faq.q} className="card-dark group p-0! transition hover:border-white/20">
             <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-white marker:hidden [&::-webkit-details-marker]:hidden">
               {faq.q}
-              <span className="text-brand-500 transition group-open:rotate-45">＋</span>
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-500/10 text-sm text-brand-400 transition group-open:rotate-45 group-open:bg-brand-500 group-open:text-white">＋</span>
             </summary>
             <p className="px-5 pb-5 text-sm leading-relaxed text-slate-400">{faq.a}</p>
           </details>
