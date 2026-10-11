@@ -534,7 +534,7 @@ export async function gerarLandingPage(
 }
 
 /**
- * Cadeia completa em UMA passagem de IA: analisarNegocio → construirSite.
+ * Cadeia completa em UMA passagem de IA: analisarNegocio → desenharSite → construirSite.
  * Devolve o HTML e o resumo da decisão (exibido no painel). Em qualquer
  * falha do caminho novo, cai no template clássico com análise padrão.
  */
@@ -543,22 +543,27 @@ export async function gerarLandingPageComAnalise(
 ): Promise<{ html: string; analise: import('./businessAnalyzer.ts').AnaliseResumo | null }> {
   const fotos = await fotosDoNicho(dados.nicho);
 
-  // ── CADEIA NOVA: Business Analyzer → Blueprint → Site Builder ──
+  // ── CADEIA NOVA: Business Analyzer → Diretor de Criação → Site Builder ──
   // O site nasce da ANÁLISE do negócio (tipo, modelo, necessidades,
-  // capacidades, formulário contextual, moeda, design). Qualquer falha
-  // da IA cai no blueprint padrão; qualquer falha do builder cai no
+  // capacidades, formulário contextual, moeda, design) e do DESENHO
+  // (hero, formato de cada seção, acabamentos). Qualquer falha
+  // da IA cai nos fallbacks; qualquer falha do builder cai no
   // template clássico abaixo — nada quebra o fluxo do usuário.
   try {
-    const { analisarNegocio, blueprintPadrao, escreverConteudoSite } = await import('./businessAnalyzer.ts');
+    const { analisarNegocio, blueprintPadrao, escreverConteudoSite, desenharSite } = await import('./businessAnalyzer.ts');
     const { construirSite } = await import('./siteBuilder.ts');
     const blueprint = config.llmApiKey ? await analisarNegocio(dados) : null;
     const blueprintFinal = blueprint ?? blueprintPadrao(dados);
     // 2ª camada: conteúdo específico do segmento (itens, serviços, FAQ, CTAs).
     // Falha inofensiva: o builder mantém os textos honestos padrão.
     const conteudo = config.llmApiKey ? await escreverConteudoSite(dados, blueprintFinal) : null;
-    const { html, resumo } = construirSite(dados, blueprintFinal, fotos, [], conteudo);
+    // 3ª camada: o diretor de criação desenha layout + estrutura como um
+    // programador sénior (sem LLM, fallback determinístico com variedade).
+    const temFoto = fotos.length > 0;
+    const design = config.llmApiKey ? await desenharSite(dados, blueprintFinal, temFoto) : null;
+    const { html, resumo } = construirSite(dados, blueprintFinal, fotos, [], conteudo, design);
     console.log(
-      `[siteGenerator] blueprint: ${resumo.negocio} · ${resumo.arquitetura} · ${resumo.secoes.length} seções${blueprint ? ' · análise IA' : ' · padrão (sem IA)'}${conteudo ? ' · conteúdo IA' : ''}`,
+      `[siteGenerator] blueprint: ${resumo.negocio} · ${resumo.arquitetura} · ${resumo.secoes.length} seções${blueprint ? ' · análise IA' : ' · padrão (sem IA)'}${conteudo ? ' · conteúdo IA' : ''}${design ? ` · design "${design.conceito}" (hero ${design.hero})` : ' · design determinístico'}`,
     );
     return { html, analise: resumo };
   } catch (erro) {

@@ -1,5 +1,5 @@
-import type { Blueprint, CampoFormulario, Plano, ConteudoSite } from './businessAnalyzer.ts';
-import { construirPlano, paisEMoeda } from './businessAnalyzer.ts';
+import type { Blueprint, CampoFormulario, Plano, ConteudoSite, DesignSite, HeroLayout } from './businessAnalyzer.ts';
+import { construirPlano, paisEMoeda, designPadrao } from './businessAnalyzer.ts';
 import type { DadosEmpresa } from './siteGenerator.ts';
 
 /**
@@ -252,9 +252,14 @@ export function construirSite(
   fotos: Foto[],
   correcoesExternas: string[] = [],
   conteudo: ConteudoSite | null = null,
+  design: DesignSite | null = null,
 ): { html: string; resumo: AnaliseResumo } {
   const plano: Plano = construirPlano(blueprint, dados);
   const d = blueprint.design_direction;
+  // Direção de arte: desenho do diretor de criação (IA) ou fallback
+  // determinístico com variedade — nunca o esqueleto fixo antigo.
+  const ds: DesignSite = design ?? designPadrao(dados, blueprint, fotos.length > 0);
+  const fmt = (chave: string, padrao: string): string => ds.formatos[chave] ?? padrao;
   const nomeSeguro = esc(dados.nome);
   const ultimaPalavra = esc(dados.nome.split(' ').slice(-1)[0] ?? '');
   const restoNome = esc(dados.nome.split(' ').slice(0, -1).join(' '));
@@ -263,6 +268,11 @@ export function construirSite(
   const fotoCapa = fotos[0];
   const fotosGaleria = fotos.slice(1, 7);
   const textoPreco = plano.textoPreco;
+  // Material partilhado pelos heros e pela faixa de conversão.
+  const chamadaCta = esc(conteudo?.chamadaHero ?? `Fale direto pelo WhatsApp — a ${dados.nome} responde você.`);
+  const ctaPri = esc(conteudo?.rotuloCtaPrincipal ?? 'Falar com a empresa');
+  const totalSecoes = plano.secoes.filter((s) => s.chave !== 'hero').length;
+  let idxSecao = 0;
 
   const secoesHtml: string[] = [];
   const linksNav: string[] = [];
@@ -272,12 +282,28 @@ export function construirSite(
     const titulo = esc(secao.titulo);
     if (secao.chave === 'hero') {
       linksNav.push(`<a href="#inicio">Início</a>`);
-      const heroEscuro = d.hero === 'escuro-foto';
+      // Direção do diretor de criação; heros com foto exigem foto real.
+      const heroKind: HeroLayout =
+        (ds.hero === 'foto-cheia' || ds.hero === 'cartao-flutuante') && !fotoCapa ? 'split' : ds.hero;
       // Material textual: IA (específico do segmento) com fallback honesto.
       const kickerTexto = esc(conteudo?.kicker ?? `${dados.nicho} em ${dados.cidade}`);
       const ctaPrincipal = esc(conteudo?.rotuloCtaPrincipal ?? 'Falar com a empresa');
       const ctaSecundario = esc(conteudo?.rotuloCtaSecundario ?? 'Ver catálogo');
-      if (heroEscuro && fotoCapa) {
+      const selosClaro = `
+      <div class="selos reveal">
+        <span>${SVG.raio} Resposta rápida</span>
+        <span>${SVG.pin} ${esc(dados.endereco ?? dados.cidade)}</span>
+        ${dados.rating ? `<span>${SVG.estrela} ${dados.rating.toFixed(1)}${dados.reviews ? ` (${dados.reviews})` : ''} no mapa</span>` : ''}
+      </div>`;
+      const divisorHtml =
+        ds.divisores === 'retos'
+          ? ''
+          : `<div class="divisor" aria-hidden="true">${
+              ds.divisores === 'onda'
+                ? '<svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C240,90 480,0 720,36 C960,72 1200,16 1440,44 L1440,70 L0,70 Z"/></svg>'
+                : '<svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,55 Q720,-10 1440,55 L1440,70 L0,70 Z"/></svg>'
+            }</div>`;
+      if (heroKind === 'foto-cheia') {
         // Referência Bella Napoli: barra de atributos no pé do hero.
         const atributos = [
           `${SVG.escudo} Qualidade comprovada`,
@@ -299,7 +325,7 @@ export function construirSite(
     <div class="atributos reveal">${atributos.map((a) => `<span>${a}</span>`).join('')}</div>
   </div>
 </header>`);
-      } else {
+      } else if (heroKind === 'split') {
         secoesHtml.push(`
 <header class="hero heroClaro" id="inicio">
   <div class="heroGrid">
@@ -317,7 +343,60 @@ export function construirSite(
     ${fotoCapa ? `<figure class="heroFoto reveal"><img src="${esc(fotoCapa.url)}" alt="${esc(fotoCapa.alt)}" loading="eager"></figure>` : ''}
   </div>
 </header>`);
+      } else if (heroKind === 'editorial') {
+        secoesHtml.push(`
+<header class="hero heroEditorial" id="inicio">
+  <span class="kicker reveal"><i></i>${kickerTexto}</span>
+  <h1 class="reveal">${restoNome} <em>${ultimaPalavra}</em></h1>
+  <p class="sub reveal">${chamadaCta}</p>
+  <div class="heroBotoes reveal">
+    <a class="cta" href="#agendar">${iconeDoNegocio(blueprint)} ${ctaPrincipal}</a>
+    <a class="cta ctaGhost" href="#catalogo">${ctaSecundario}</a>
+  </div>
+  <p class="edMeta reveal">${dados.rating ? `${SVG.estrela} ${dados.rating.toFixed(1)}${dados.reviews ? ` · ${dados.reviews} avaliações` : ''} no mapa · ` : ''}${esc(dados.endereco ?? dados.cidade)}</p>
+</header>`);
+      } else if (heroKind === 'cartao-flutuante') {
+        secoesHtml.push(`
+<header class="hero heroCartao" id="inicio">
+  <figure class="heroCartaoFoto reveal"><img src="${esc(fotoCapa?.url ?? '')}" alt="${esc(fotoCapa?.alt ?? dados.nome)}" loading="eager"></figure>
+  <div class="heroCartaoCard reveal">
+    <span class="kicker"><i></i>${kickerTexto}</span>
+    <h1>${restoNome} <em>${ultimaPalavra}</em></h1>
+    <p class="sub">${chamadaCta}</p>
+    <div class="heroBotoes">
+      <a class="cta" href="#agendar">${iconeDoNegocio(blueprint)} ${ctaPrincipal}</a>
+      <a class="cta ctaGhost" href="#catalogo">${ctaSecundario}</a>
+    </div>
+  </div>
+</header>`);
+      } else if (heroKind === 'faixa') {
+        secoesHtml.push(`
+<header class="hero heroFaixa" id="inicio">
+  <div class="heroFaixaConteudo">
+    <span class="kicker reveal"><i></i>${kickerTexto}</span>
+    <h1 class="reveal">${restoNome} <em>${ultimaPalavra}</em></h1>
+    <p class="sub reveal">${chamadaCta}</p>
+    <div class="heroBotoes reveal">
+      <a class="cta" href="#agendar">${iconeDoNegocio(blueprint)} ${ctaPrincipal}</a>
+      <a class="cta ctaGhost" href="#catalogo">${ctaSecundario}</a>
+    </div>
+    ${selosClaro}
+  </div>
+</header>`);
+      } else if (heroKind === 'centro') {
+        secoesHtml.push(`
+<header class="hero heroCentro" id="inicio">
+  <span class="kicker reveal"><i></i>${kickerTexto}</span>
+  <h1 class="reveal">${restoNome} <em>${ultimaPalavra}</em></h1>
+  <p class="sub reveal">${chamadaCta}</p>
+  <div class="heroBotoes reveal">
+    <a class="cta" href="#agendar">${iconeDoNegocio(blueprint)} ${ctaPrincipal}</a>
+    ${temWhats ? `<a class="cta ctaGhost" href="https://wa.me/${wa}" target="_blank" rel="noreferrer">${SVG.telefone} Chamar no WhatsApp</a>` : `<a class="cta ctaGhost" href="#catalogo">${ctaSecundario}</a>`}
+  </div>
+  ${selosClaro}
+</header>`);
       }
+      if (divisorHtml) secoesHtml.push(divisorHtml);
       primeira = false;
       continue;
     }
@@ -326,64 +405,147 @@ export function construirSite(
     linksNav.push(`<a href="#${ancora}">${titulo.length > 16 ? titulo.slice(0, 15) + '…' : titulo}</a>`);
 
     switch (secao.chave) {
-      case 'catalogo':
+      case 'catalogo': {
+        const formatoCatalogo = fmt('catalogo', 'grade');
+        const caps = blueprint.capabilities;
+        const icone = iconeCatalogo(caps);
+        const itens = conteudo?.itensCatalogo?.length ? conteudo.itensCatalogo : catalogoPadrao(caps, dados.nome);
+        const nota = `<p class="notaCatalogo reveal">Preços e detalhes atualizados direto com <b>${esc(dados.nome)}</b> pelo WhatsApp — sem valores desatualizados no site.</p>`;
+        let corpoCatalogo: string;
+        if (formatoCatalogo === 'lista') {
+          corpoCatalogo = `
+  <div class="listaCatalogo">
+    ${itens.map((item) => `<article class="linhaCatalogo reveal"><div class="cartaoIco">${icone}</div><div><h3>${esc(item.titulo)}</h3><p>${esc(item.nota)}</p></div><span class="precoTag">${esc(textoPreco)}</span></article>`).join('')}
+  </div>`;
+        } else if (formatoCatalogo === 'destaque' && itens.length > 1) {
+          const [primeiro, ...resto] = itens;
+          corpoCatalogo = `
+  <div class="gradeCatalogo">
+    <article class="cartao cartaoDestaque reveal"><div class="cartaoIco">${icone}</div><div><h3>${esc(primeiro.titulo)}</h3><p>${esc(primeiro.nota)}</p></div><div><span class="precoTag">${esc(textoPreco)}</span><br><a class="ctaCard" href="#agendar">Pedir pelo WhatsApp</a></div></article>
+    ${resto.map((item, i) => `<article class="cartao reveal" style="transition-delay:${i * 70}ms"><div class="cartaoIco">${icone}</div><h3>${esc(item.titulo)}</h3><p>${esc(item.nota)}</p><span class="precoTag">${esc(textoPreco)}</span><a class="ctaCard" href="#agendar">Pedir pelo WhatsApp</a></article>`).join('')}
+  </div>`;
+        } else {
+          corpoCatalogo = cartoesCatalogo(blueprint, dados, textoPreco, conteudo);
+        }
         secoesHtml.push(`
 <section id="catalogo">
   <h2 class="reveal">${titulo}</h2>
   <p class="chamada reveal">O que a <b>${esc(dados.nome)}</b> oferece.</p>
-  ${cartoesCatalogo(blueprint, dados, textoPreco, conteudo)}
+  ${corpoCatalogo}
+  ${formatoCatalogo === 'grade' ? '' : nota}
 </section>`);
         break;
+      }
       case 'servicos': {
         // Serviços escritos pela IA para ESTE segmento; fallback honesto.
         const servicos = conteudo?.servicos?.length
           ? conteudo.servicos
           : SERVICOS_PADRAO;
-        secoesHtml.push(`
-<section id="servicos">
-  <h2 class="reveal">${titulo}</h2>
-  <p class="chamada reveal">Como a <b>${esc(dados.nome)}</b> atende você.</p>
+        const formatoServicos = fmt('servicos', 'cartoes');
+        let corpoServicos: string;
+        if (formatoServicos === 'linhas') {
+          corpoServicos = `
+  <ol class="linhasServ">
+    ${servicos.map((s, i) => `<li class="reveal"><span class="numServ">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(s.titulo)}</h3><p>${esc(s.descricao)}</p></div></li>`).join('')}
+  </ol>`;
+        } else if (formatoServicos === 'faixa') {
+          corpoServicos = `
+  <div class="faixaScroll">
+    ${servicos.map((s) => `<article class="cartao reveal"><div class="cartaoIco">${iconeDoNegocio(blueprint)}</div><h3>${esc(s.titulo)}</h3><p>${esc(s.descricao)}</p></article>`).join('')}
+  </div>`;
+        } else {
+          corpoServicos = `
   <div class="gradeCatalogo">
     ${servicos
       .map(
         (s, i) => `<article class="cartao reveal" style="transition-delay:${i * 70}ms"><div class="cartaoIco">${iconeDoNegocio(blueprint)}</div><h3>${esc(s.titulo)}</h3><p>${esc(s.descricao)}</p></article>`,
       )
       .join('')}
-  </div>
+  </div>`;
+        }
+        secoesHtml.push(`
+<section id="servicos">
+  <h2 class="reveal">${titulo}</h2>
+  <p class="chamada reveal">Como a <b>${esc(dados.nome)}</b> atende você.</p>
+  ${corpoServicos}
 </section>`);
         break;
       }
       case 'galeria':
         if (fotosGaleria.length > 0) {
+          const corpoGaleria =
+            fmt('galeria', 'grade') === 'faixa'
+              ? `<div class="faixaScroll faixaFotos">${fotosGaleria.map((f) => `<figure class="fotoFaixa reveal"><img src="${esc(f.url)}" alt="${esc(f.alt)}" loading="lazy"></figure>`).join('')}</div>`
+              : `<div class="galeria">
+    ${fotosGaleria.map((f) => `<figure class="reveal"><img src="${esc(f.url)}" alt="${esc(f.alt)}" loading="lazy"></figure>`).join('')}
+  </div>`;
           secoesHtml.push(`
 <section id="galeria">
   <h2 class="reveal">${titulo}</h2>
-  <div class="galeria">
-    ${fotosGaleria.map((f) => `<figure class="reveal"><img src="${esc(f.url)}" alt="${esc(f.alt)}" loading="lazy"></figure>`).join('')}
-  </div>
+  ${corpoGaleria}
 </section>`);
         }
         break;
-      case 'equipe':
+      case 'equipe': {
+        const corpoEquipe =
+          fmt('equipe', 'nota') === 'cartoes'
+            ? `<div class="gradeCatalogo">
+    <article class="cartao reveal"><div class="cartaoIco">${SVG.usuarios}</div><h3>Atendimento de verdade</h3><p>Quem atende na ${nomeSeguro} conhece o serviço e resolve sem enrolação.</p></article>
+    <article class="cartao reveal" style="transition-delay:70ms"><div class="cartaoIco">${SVG.escudo}</div><h3>Profissionais do segmento</h3><p>${esc(conteudo?.destaqueEquipe ?? `A ${dados.nome} tem profissionais prontos para o seu atendimento.`)}</p></article>
+    <article class="cartao reveal" style="transition-delay:140ms"><div class="cartaoIco">${SVG.telefone}</div><h3>Contato direto</h3><p>Sem robôs: você fala com gente de verdade pelo WhatsApp.</p></article>
+  </div>`
+            : `<p class="reveal notaEquipe">${esc(conteudo?.destaqueEquipe ?? `A ${dados.nome} tem profissionais prontos para o seu atendimento — conheça a equipe pelo WhatsApp.`)}</p>`;
         secoesHtml.push(`
 <section id="equipe">
   <h2 class="reveal">${titulo}</h2>
   <p class="chamada reveal">Quem vai atender você.</p>
-  <p class="reveal notaEquipe">${esc(conteudo?.destaqueEquipe ?? `A ${dados.nome} tem profissionais prontos para o seu atendimento — conheça a equipe pelo WhatsApp.`)}</p>
+  ${corpoEquipe}
 </section>`);
         break;
+      }
       case 'avaliacoes':
-        secoesHtml.push(blocoAvaliacoes(dados));
+        if (fmt('avaliacoes', 'caixa') === 'faixa') {
+          secoesHtml.push(`
+<section id="reputacao" class="faixaCheia faixaProva">
+  <div class="faixaProvaConteudo reveal">
+    ${dados.rating ? `<span class="faixaProvaNota">${dados.rating.toFixed(1)}</span><div><div class="ratingEstrelas" aria-label="${dados.rating} de 5">${'<svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>'.repeat(5)}</div><p>${dados.reviews ? `${dados.reviews} avaliações` : 'Avaliações'} de clientes do mapa</p></div>` : `<div><h2>Reputação</h2><p>Peça as avaliações da <b>${esc(dados.nome)}</b> diretamente pelo WhatsApp.</p></div>`}
+  </div>
+</section>`);
+        } else {
+          secoesHtml.push(blocoAvaliacoes(dados));
+        }
         break;
       case 'horario':
-        secoesHtml.push(`
+        if (fmt('horario', 'faixa') === 'cartao') {
+          secoesHtml.push(`
+<section id="horario">
+  <h2 class="reveal">${titulo}</h2>
+  <div class="cartao cartaoHorario reveal">
+    <div class="cartaoIco">${SVG.relogio}</div>
+    <div><h3>Horário de atendimento</h3><p>Confirme o horário de hoje pelo WhatsApp — feriados e datas especiais mudam a rotina.</p><a class="ctaCard" href="#agendar">Confirmar horário</a></div>
+  </div>
+</section>`);
+        } else {
+          secoesHtml.push(`
 <section id="horario">
   <h2 class="reveal">${titulo}</h2>
   <p class="chamada reveal">${SVG.relogio} Horário de atendimento — confirme feriados pelo WhatsApp.</p>
 </section>`);
+        }
         break;
       case 'localizacao':
-        secoesHtml.push(`
+        if (fmt('localizacao', 'cartao') === 'faixa') {
+          secoesHtml.push(`
+<section id="localizacao" class="faixaCheia faixaLocal">
+  <div class="reveal">
+    <div class="localIco">${SVG.pin}</div>
+    <p class="localEnd"><b>${nomeSeguro}</b></p>
+    <p>${esc(dados.endereco ?? dados.cidade)}</p>
+    <a class="linkMapa" target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dados.nome + ' ' + dados.cidade)}">Abrir no Google Maps</a>
+  </div>
+</section>`);
+        } else {
+          secoesHtml.push(`
 <section id="localizacao">
   <h2 class="reveal">${titulo}</h2>
   <div class="localBox reveal">
@@ -395,6 +557,7 @@ export function construirSite(
     </div>
   </div>
 </section>`);
+        }
         break;
       case 'faq': {
         const faqItens = conteudo?.faq?.length
@@ -403,20 +566,31 @@ export function construirSite(
               { pergunta: 'Onde vocês ficam?', resposta: `${dados.endereco ?? dados.cidade}. Mande mensagem que enviamos a localização exata.` },
               { pergunta: 'Como falo com vocês?', resposta: 'Pelo WhatsApp mesmo — a mensagem já chega com seu nome e o que você precisa.' },
             ];
+        const corpoFaq =
+          fmt('faq', 'acordeao') === 'colunas'
+            ? `<div class="faqColunas">${faqItens.map((f) => `<details class="reveal"><summary>${esc(f.pergunta)}</summary><p>${esc(f.resposta)}</p></details>`).join('\n  ')}</div>`
+            : faqItens.map((f) => `<details class="reveal"><summary>${esc(f.pergunta)}</summary><p>${esc(f.resposta)}</p></details>`).join('\n  ');
         secoesHtml.push(`
 <section id="faq">
   <h2 class="reveal">${titulo}</h2>
-  ${faqItens.map((f) => `<details class="reveal"><summary>${esc(f.pergunta)}</summary><p>${esc(f.resposta)}</p></details>`).join('\n  ')}
+  ${corpoFaq}
 </section>`);
         break;
       }
-      case 'sobre':
+      case 'sobre': {
+        const textoSobre = esc(conteudo?.sobre ?? `A ${dados.nome} atende em ${dados.cidade} com um compromisso simples: pontualidade, capricho e um atendimento que faz o cliente voltar.`);
+        const fotoSobre = fotos[1] ?? fotoCapa;
+        const corpoSobre =
+          fmt('sobre', 'texto') === 'split' && fotoSobre
+            ? `<div class="sobreSplit"><p class="chamada reveal">${textoSobre}</p><figure class="reveal"><img src="${esc(fotoSobre.url)}" alt="${esc(fotoSobre.alt)}" loading="lazy"></figure></div>`
+            : `<p class="chamada reveal">${textoSobre}</p>`;
         secoesHtml.push(`
 <section id="sobre">
   <h2 class="reveal">${titulo}</h2>
-  <p class="chamada reveal">${esc(conteudo?.sobre ?? `A ${dados.nome} atende em ${dados.cidade} com um compromisso simples: pontualidade, capricho e um atendimento que faz o cliente voltar.`)}</p>
+  ${corpoSobre}
 </section>`);
         break;
+      }
       case 'agendar':
       case 'contato':
       case 'pedido':
@@ -425,10 +599,7 @@ export function construirSite(
         if (primeira) primeira = false;
         const campos = plano.campos.map(campoHtml).join('');
         const saudacao = esc(plano.saudacoes[0] ?? `Olá! Gostaria de saber mais sobre a ${dados.nome}.`);
-        secoesHtml.push(`
-<section id="agendar">
-  <h2 class="reveal">${titulo === 'Contato' ? 'Fale conosco' : titulo}</h2>
-  <p class="chamada reveal">Preencha e a mensagem chega pronta no WhatsApp da <b>${esc(dados.nome)}</b>.</p>
+        const formHtml = `
   <form id="form" class="reveal">
     <label class="campo"><span>Seu nome</span><input name="nome" required placeholder="Como podemos te chamar"></label>
     <label class="campo"><span>Seu WhatsApp</span><input name="zap" type="tel" required placeholder="DDD + número"></label>
@@ -436,17 +607,76 @@ export function construirSite(
     <span class="saudacaoOculta" id="${SAUDACAO_ID}" hidden>${saudacao}</span>
     <button class="botaoAgendar" type="submit">${SVG.telefone} Enviar pelo WhatsApp</button>
     <p class="avisoEnvio">Ao enviar, abre o seu WhatsApp com a mensagem pronta — só apertar enviar.</p>
-  </form>
+  </form>`;
+        const formatoAgendar = fmt('agendar', 'form');
+        if (formatoAgendar === 'split') {
+          secoesHtml.push(`
+<section id="agendar">
+  <h2 class="reveal">${titulo === 'Contato' ? 'Fale conosco' : titulo}</h2>
+  <p class="chamada reveal">Preencha e a mensagem chega pronta no WhatsApp da <b>${esc(dados.nome)}</b>.</p>
+  <div class="agendarSplit">
+    <div class="agendarInfo reveal">
+      <p><span class="infoIco">${SVG.pin}</span>${esc(dados.endereco ?? dados.cidade)}</p>
+      ${dados.telefone ? `<p><span class="infoIco">${SVG.telefone}</span>${esc(dados.telefone)}</p>` : ''}
+      ${dados.rating ? `<p><span class="infoIco">${SVG.estrela}</span>${dados.rating.toFixed(1)}${dados.reviews ? ` (${dados.reviews} avaliações)` : ''} no mapa</p>` : ''}
+      ${temWhats ? `<a class="ctaCard" href="https://wa.me/${wa}" target="_blank" rel="noreferrer">Chamar direto no WhatsApp</a>` : ''}
+    </div>
+    ${formHtml}
+  </div>
 </section>`);
+        } else if (formatoAgendar === 'centro') {
+          secoesHtml.push(`
+<section id="agendar">
+  <h2 class="reveal" style="text-align:center">${titulo === 'Contato' ? 'Fale conosco' : titulo}</h2>
+  <p class="chamada reveal" style="text-align:center;margin-left:auto;margin-right:auto">Preencha e a mensagem chega pronta no WhatsApp da <b>${esc(dados.nome)}</b>.</p>
+  <div class="agendarCentro">
+    ${temWhats ? `<a class="cta reveal" href="https://wa.me/${wa}" target="_blank" rel="noreferrer">${SVG.telefone} Chamar direto no WhatsApp</a>` : ''}
+    ${formHtml}
+  </div>
+</section>`);
+        } else {
+          secoesHtml.push(`
+<section id="agendar">
+  <h2 class="reveal">${titulo === 'Contato' ? 'Fale conosco' : titulo}</h2>
+  <p class="chamada reveal">Preencha e a mensagem chega pronta no WhatsApp da <b>${esc(dados.nome)}</b>.</p>
+  ${formHtml}
+</section>`);
+        }
         break;
       }
       default:
         break;
     }
+
+    // Faixa de conversão no meio da página (quando o diretor manda).
+    if (secao.chave !== 'hero') {
+      idxSecao += 1;
+      if (ds.faixaCta && idxSecao === Math.max(1, Math.ceil(totalSecoes / 2))) {
+        secoesHtml.push(`
+<section class="faixaCheia faixaCta">
+  <div class="faixaCtaConteudo reveal">
+    <div><h2>Pronto para começar?</h2><p>${chamadaCta}</p></div>
+    <a class="cta" href="#agendar">${iconeDoNegocio(blueprint)} ${ctaPri}</a>
+  </div>
+</section>`);
+      }
+    }
+  }
+
+  // Ritmo visual: seções alternadas com fundo suave (só nas seções
+  // simples, sem classe própria — as faixas já têm fundo).
+  if (ds.fundoAlternado) {
+    let n = 0;
+    for (let i = 0; i < secoesHtml.length; i++) {
+      if (!secoesHtml[i].trimStart().startsWith('<section id=')) continue;
+      n += 1;
+      if (n % 2 === 0) secoesHtml[i] = secoesHtml[i].replace('<section ', '<section class="alt" ');
+    }
   }
 
   const tipografiaLink = FONTES_LINK[d.tipografia] ?? '';
   const densidade = { compacta: '2.2rem', confortavel: '3.4rem', ampla: '4.6rem' }[d.densidade];
+  const raio = { vivos: '10px', suaves: '16px', redondos: '26px' }[ds.cantos];
 
   const html = `<!DOCTYPE html>
 <html lang="${blueprint.linguagem.slice(0, 2)}"><head>
@@ -464,7 +694,7 @@ ${jsonLd(blueprint, dados)}
 :root{
   --p:${d.primario};--a:${d.acento};--bg:${d.fundo};--ink:${d.tinta};--btn:${d.textoBotao};
   --card:#ffffff;--borda:rgba(0,0,0,.09);--mut:#6d6a62;--pSuave:${d.primario}14;--pBorda:${d.primario}45;
-  --fonte:${FONTE[d.tipografia]};--pad:${densidade}
+  --fonte:${FONTE[d.tipografia]};--pad:${densidade};--raio:${raio}
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -501,7 +731,7 @@ h1 em{font-style:italic;color:var(--p)}
 .sub{color:var(--mut);font-size:1.06rem;margin:1.2rem 0 2rem;max-width:46ch}
 .selos{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:1.6rem;color:var(--mut);font-size:.9rem}
 .selos span{display:inline-flex;align-items:center;gap:.45rem}
-.heroFoto{border-radius:24px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.16);min-height:400px;background:var(--card)}
+.heroFoto{border-radius:var(--raio);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.16);min-height:400px;background:var(--card)}
 .heroFoto img{width:100%;height:100%;object-fit:cover;display:block}
 .heroEscuro{position:relative;min-height:88vh;display:flex;align-items:center;padding:0}
 .heroFundo{position:absolute;inset:0}
@@ -523,7 +753,7 @@ h1 em{font-style:italic;color:var(--p)}
 .acaoTrio a:hover{transform:translateY(-3px);background:rgba(255,255,255,.14)}
 .acaoTrio .ic{width:1.35rem;height:1.35rem;color:var(--a)}
 .gradeCatalogo{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
-.cartao{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:1.4rem;display:flex;flex-direction:column;gap:.5rem;box-shadow:0 6px 24px rgba(0,0,0,.05);transition:transform .25s ease,box-shadow .25s ease}
+.cartao{background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);padding:1.4rem;display:flex;flex-direction:column;gap:.5rem;box-shadow:0 6px 24px rgba(0,0,0,.05);transition:transform .25s ease,box-shadow .25s ease}
 .cartao:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.10)}
 .cartaoIco .ic{width:1.7rem;height:1.7rem;color:var(--p)}
 .cartao h3{font-size:1.12rem}
@@ -532,12 +762,12 @@ h1 em{font-style:italic;color:var(--p)}
 .cartao .ctaCard{margin-top:.5rem;display:inline-flex;align-items:center;justify-content:center;gap:.45rem;font-size:.82rem;font-weight:800;color:var(--btn);background:var(--p);border-radius:10px;padding:.6rem .9rem;text-decoration:none}
 .notaCatalogo{margin-top:1.2rem;color:var(--mut);font-size:.9rem}
 .galeria{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-.galeria figure{border-radius:18px;overflow:hidden;background:var(--card)}
+.galeria figure{border-radius:var(--raio);overflow:hidden;background:var(--card)}
 .galeria img{width:100%;height:210px;object-fit:cover;display:block}
-.ratingBox{display:flex;gap:1.4rem;align-items:center;background:var(--card);border:1px solid var(--borda);border-radius:20px;padding:1.6rem;max-width:26rem}
+.ratingBox{display:flex;gap:1.4rem;align-items:center;background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);padding:1.6rem;max-width:26rem}
 .ratingNota{font-size:2.8rem;font-weight:800;color:var(--p)}
 .ratingEstrelas .ic{color:${d.acento};width:1.05rem;height:1.05rem}
-.localBox{display:flex;gap:1.2rem;align-items:flex-start;background:var(--card);border:1px solid var(--borda);border-radius:20px;padding:1.7rem;max-width:34rem}
+.localBox{display:flex;gap:1.2rem;align-items:flex-start;background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);padding:1.7rem;max-width:34rem}
 .localIco .ic{width:1.6rem;height:1.6rem;color:var(--p)}
 .localEnd{font-size:1.05rem}
 .linkMapa{display:inline-block;margin-top:.7rem;font-weight:800;color:var(--p);text-decoration:none;border-bottom:2px solid var(--pBorda)}
@@ -549,10 +779,83 @@ h1 em{font-style:italic;color:var(--p)}
 .botaoAgendar{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;font-weight:800;color:var(--btn);background:linear-gradient(120deg,var(--p),var(--a));border:0;padding:1rem 1.6rem;border-radius:999px;font-size:1rem;cursor:pointer}
 .avisoEnvio{color:var(--mut);font-size:.85rem}
 .notaEquipe{color:var(--mut);max-width:52ch}
-details{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:1.1rem 1.3rem;margin-bottom:.8rem;max-width:46rem}
+details{background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);padding:1.1rem 1.3rem;margin-bottom:.8rem;max-width:46rem}
 summary{font-weight:800;cursor:pointer}
 details p{color:var(--mut);margin-top:.6rem}
-@media(max-width:860px){.heroGrid{grid-template-columns:1fr;gap:2.2rem}.heroFoto{min-height:280px}.acaoTrio{grid-template-columns:1fr;max-width:22rem}.nav{display:none}}
+/* ── Direção do diretor de criação: heros ── */
+.heroEditorial{max-width:66rem;margin:0 auto;padding:6rem 1.5rem 5rem}
+.heroEditorial h1{font-size:clamp(3rem,8.5vw,6.2rem);line-height:1;letter-spacing:-.04em}
+.heroEditorial .sub{font-size:1.15rem}
+.edMeta{margin-top:1.6rem;color:var(--mut);font-size:.92rem;display:flex;align-items:center;gap:.5rem}
+.edMeta .ic{color:var(--a)}
+.heroCartao{max-width:66rem;margin:0 auto;padding:3rem 1.5rem 5rem}
+.heroCartaoFoto{margin:0;border-radius:28px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.18);height:380px}
+.heroCartaoFoto img{width:100%;height:100%;object-fit:cover;display:block}
+.heroCartaoCard{background:#fff;border:1px solid var(--borda);border-radius:24px;padding:2.4rem 2rem;max-width:38rem;margin:-7rem auto 0;position:relative;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.12)}
+.heroCartaoCard h1{font-size:clamp(2rem,4.6vw,3.2rem)}
+.heroCartaoCard .sub{margin-left:auto;margin-right:auto}
+.heroCartaoCard .heroBotoes{justify-content:center}
+.heroFaixa{background:radial-gradient(circle at 18% 25%,rgba(255,255,255,.20),transparent 55%),linear-gradient(120deg,var(--p),var(--a));color:#fff;padding:5rem 1.5rem}
+.heroFaixaConteudo{max-width:66rem;margin:0 auto}
+.heroFaixa .kicker{color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.14)}
+.heroFaixa .kicker i{background:#fff}
+.heroFaixa h1{color:#fff}
+.heroFaixa h1 em{color:#fff;text-decoration:underline;text-decoration-thickness:.08em;text-underline-offset:.12em}
+.heroFaixa .sub{color:rgba(255,255,255,.88)}
+.heroFaixa .cta{background:#fff;color:var(--p);box-shadow:0 14px 34px rgba(0,0,0,.22)}
+.heroFaixa .selos{color:rgba(255,255,255,.9)}
+.heroCentro{max-width:60rem;margin:0 auto;padding:6rem 1.5rem 5.5rem;text-align:center}
+.heroCentro h1{font-size:clamp(2.6rem,6.4vw,4.8rem);margin-left:auto;margin-right:auto}
+.heroCentro .sub{margin-left:auto;margin-right:auto}
+.heroCentro .heroBotoes{justify-content:center}
+.heroCentro .selos{justify-content:center}
+.heroEditorial .ctaGhost,.heroCentro .ctaGhost,.heroCartaoCard .ctaGhost{background:var(--pSuave);border:1px solid var(--pBorda);box-shadow:none}
+.divisor svg{display:block;width:100%;height:64px;margin:-4rem 0 -1px;position:relative;z-index:1}
+.divisor svg path{fill:var(--bg)}
+/* ── Formatos de seção ── */
+.listaCatalogo{display:grid;gap:.8rem}
+.linhaCatalogo{display:flex;gap:1rem;align-items:center;background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);padding:1rem 1.2rem}
+.linhaCatalogo h3{font-size:1.05rem}
+.linhaCatalogo p{color:var(--mut);font-size:.9rem}
+.linhaCatalogo .precoTag{margin-left:auto;white-space:nowrap}
+.cartaoDestaque{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;background:linear-gradient(120deg,var(--pSuave),var(--card))}
+.cartaoDestaque .ctaCard{margin-top:0;white-space:nowrap}
+.linhasServ{list-style:none;border-top:1px solid var(--borda)}
+.linhasServ li{display:flex;gap:1.2rem;align-items:baseline;padding:1.1rem .2rem;border-bottom:1px solid var(--borda)}
+.linhasServ h3{font-size:1.1rem}
+.linhasServ p{color:var(--mut);font-size:.94rem}
+.numServ{font-weight:800;color:var(--p);font-size:1rem}
+.faixaScroll{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,320px);gap:1.2rem;overflow-x:auto;padding-bottom:1rem;scroll-snap-type:x mandatory}
+.faixaScroll>*{scroll-snap-align:start}
+.fotoFaixa{border-radius:var(--raio);overflow:hidden;margin:0;min-width:280px}
+.fotoFaixa img{width:100%;height:210px;object-fit:cover;display:block}
+.sobreSplit{display:grid;grid-template-columns:1.05fr .95fr;gap:2.4rem;align-items:center}
+.sobreSplit img{border-radius:var(--raio);width:100%;height:320px;object-fit:cover;display:block}
+.sobreSplit .chamada{margin:0}
+.faqColunas{display:grid;grid-template-columns:1fr 1fr;gap:0 1.2rem;align-items:start}
+.agendarSplit{display:grid;grid-template-columns:.9fr 1.1fr;gap:2.4rem;align-items:start}
+.agendarInfo{background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);padding:1.7rem;display:grid;gap:1rem}
+.agendarInfo p{display:flex;align-items:center;gap:.7rem;color:var(--mut);font-size:.95rem}
+.agendarInfo .infoIco .ic{width:1.4rem;height:1.4rem;color:var(--p)}
+.agendarCentro{max-width:30rem;margin:0 auto;display:grid;gap:1.2rem;justify-items:center}
+.agendarCentro #form{width:100%}
+/* ── Faixas full-bleed e ritmo ── */
+.faixaCheia{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;max-width:100vw}
+.faixaProva{background:linear-gradient(120deg,var(--p),var(--a));color:#fff;padding:3.4rem 1.5rem}
+.faixaProvaConteudo{max-width:66rem;margin:0 auto;display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap}
+.faixaProvaNota{font-size:3.2rem;font-weight:800}
+.faixaProva .ratingEstrelas .ic{color:#fff;width:1.05rem;height:1.05rem}
+.faixaProva h2{color:#fff}
+.faixaLocal{background:var(--tinta);color:#f2efe9;text-align:center;padding:3.4rem 1.5rem}
+.faixaLocal .localIco .ic{width:2rem;height:2rem;color:var(--a)}
+.faixaLocal .linkMapa{color:var(--a)}
+.faixaCta{background:linear-gradient(120deg,var(--p),var(--a));color:#fff;padding:3.6rem 1.5rem}
+.faixaCtaConteudo{max-width:66rem;margin:0 auto;display:flex;gap:1.6rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.faixaCta h2{color:#fff}
+.faixaCta p{color:rgba(255,255,255,.88);margin-top:.5rem;max-width:52ch}
+.faixaCta .cta{background:#fff;color:var(--p);box-shadow:0 14px 34px rgba(0,0,0,.22)}
+.alt{background:var(--pSuave);box-shadow:0 0 0 100vmax var(--pSuave);clip-path:inset(0 -100vmax)}
+@media(max-width:860px){.heroGrid{grid-template-columns:1fr;gap:2.2rem}.heroFoto{min-height:280px}.acaoTrio{grid-template-columns:1fr;max-width:22rem}.nav{display:none}.sobreSplit,.agendarSplit,.faqColunas{grid-template-columns:1fr}.cartaoDestaque{grid-template-columns:1fr}.heroCartaoFoto{height:260px}.heroCartaoCard{margin:-4rem 1rem 0;padding:1.8rem 1.2rem}}
 @media(max-width:640px){section{padding:2.6rem 1.2rem}}
 </style></head>
 <body>
@@ -567,7 +870,7 @@ ${secoesHtml.join('\n')}
     </div>
     <div>
       <b style="color:#fff">Horário de Funcionamento</b>
-      <p style="margin-top:.5rem;font-size:.85rem;line-height:1.9">Seg a Sex: 9h às 18h<br>Sábado: 9h às 14h<br>Domingo: fechado</p>
+      <p style="margin-top:.5rem;font-size:.85rem">Consulte o horário de hoje pelo WhatsApp — feriados mudam a rotina.</p>
     </div>
     <div>
       <b style="color:#fff">Localização</b>

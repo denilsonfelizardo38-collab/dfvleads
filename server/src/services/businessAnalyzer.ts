@@ -601,3 +601,219 @@ export function resumirAnalise(blueprint: Blueprint, plano: Plano, correcoes: st
     correcoes,
   };
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DIRETOR DE CRIAÇÃO — a IA pensa como programador front-end sénior:
+   parte do modelo do negócio, decide o LAYOUT (hero), a ESTRUTURA
+   (formato de cada seção), os detalhes (cantos, divisores, faixas) e
+   só então o builder executa. Sites de nichos diferentes param de
+   parecer o mesmo template com outra cor.
+
+   Regras duras:
+   - Vocabulário fechado de heros/formatos (validados abaixo); qualquer
+     invencionice cai no fallback pontual — o site nunca quebra.
+   - Sem foto disponível, heros com foto são proibidos (caem p/ split).
+   - Sem LLM, o fallback é DETERMINÍSTICO COM VARIEDADE: negócios
+     diferentes recebem designs diferentes (hash do nome+nicho+cidade).
+   ═══════════════════════════════════════════════════════════════════ */
+
+export type HeroLayout =
+  | 'foto-cheia'       // foto fullscreen de fundo, texto central (impacto)
+  | 'split'            // texto à esquerda, foto à direita (clássico)
+  | 'editorial'        // tipografia gigante, quase sem foto (sofisticado)
+  | 'cartao-flutuante' // foto em cartão + cartão branco flutuante (moderno)
+  | 'faixa'            // faixa com padrão + conteúdo (ousado)
+  | 'centro';          // texto centrado, sem foto (limpo, direto)
+
+const HEROS_VALIDOS: readonly string[] = [
+  'foto-cheia', 'split', 'editorial', 'cartao-flutuante', 'faixa', 'centro',
+];
+
+/** Formatos válidos por seção (chave do chaveSecao → formatos). */
+export const FORMATOS_VALIDOS: Record<string, readonly string[]> = {
+  catalogo: ['grade', 'lista', 'destaque'],
+  servicos: ['cartoes', 'linhas', 'faixa'],
+  galeria: ['grade', 'faixa'],
+  equipe: ['nota', 'cartoes'],
+  avaliacoes: ['caixa', 'faixa'],
+  horario: ['faixa', 'cartao'],
+  localizacao: ['cartao', 'faixa'],
+  sobre: ['texto', 'split'],
+  faq: ['acordeao', 'colunas'],
+  agendar: ['form', 'split', 'centro'],
+};
+
+export interface DesignSite {
+  conceito: string;                    // a ideia do design em 1 frase
+  hero: HeroLayout;
+  cantos: 'vivos' | 'suaves' | 'redondos';
+  divisores: 'retos' | 'curva' | 'onda';
+  fundoAlternado: boolean;             // seções alternadas com fundo suave
+  faixaCta: boolean;                   // faixa de conversão no meio da página
+  formatos: Record<string, string>;    // chave da seção → formato
+}
+
+/** Mapeia o hero antigo do blueprint para o vocabulário novo. */
+export function mapearHero(hero: string): HeroLayout {
+  if (hero === 'escuro-foto') return 'foto-cheia';
+  if (hero === 'claro-split') return 'split';
+  if ((HEROS_VALIDOS as readonly string[]).includes(hero)) return hero as HeroLayout;
+  return 'split';
+}
+
+/** Hash determinístico FNV-1a (seed de variedade, sem aleatoriedade). */
+export function hashSeed(texto: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < texto.length; i++) {
+    h ^= texto.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+
+/**
+ * Fallback determinístico COM variedade: o mesmo negócio recebe sempre o
+ * mesmo design; negócios diferentes (quase sempre) recebem designs
+ * diferentes — mesmo sem LLM, os sites param de ser clones.
+ */
+export function designPadrao(dados: DadosEmpresa, blueprint: Blueprint, temFoto: boolean): DesignSite {
+  const seed = hashSeed(`${dados.nome} ${dados.nicho} ${dados.cidade}`);
+  const pick = <T>(lista: readonly T[], salt: number): T =>
+    lista[((seed + Math.imul(salt, 0x9e3779b9)) >>> 0) % lista.length];
+
+  const heros: HeroLayout[] = temFoto
+    ? ['foto-cheia', 'split', 'editorial', 'cartao-flutuante', 'faixa', 'centro']
+    : ['editorial', 'centro', 'faixa', 'split'];
+  const formatos: Record<string, string> = {};
+  let salt = 7;
+  for (const opcoes of Object.values(FORMATOS_VALIDOS)) {
+    formatos[Object.keys(FORMATOS_VALIDOS)[salt - 7]] = pick(opcoes, salt);
+    salt += 1;
+  }
+  return {
+    conceito: `Direção ${blueprint.design_direction.mood} para ${blueprint.specific_type} (determinística).`,
+    hero: pick(heros, 1),
+    cantos: pick(['vivos', 'suaves', 'redondos'] as const, 40),
+    divisores: pick(['retos', 'curva', 'onda'] as const, 41),
+    fundoAlternado: pick([true, false] as const, 42),
+    faixaCta: pick([true, false] as const, 43),
+    formatos,
+  };
+}
+
+/** Valida o JSON do diretor de criação; cada furo cai no fallback pontual. */
+export function validarDesign(bruto: unknown, fallback: DesignSite, temFoto: boolean): DesignSite {
+  const b = (bruto ?? {}) as Record<string, unknown>;
+  const umDe = (v: unknown, lista: readonly string[], padrao: string): string =>
+    typeof v === 'string' && lista.includes(v) ? v : padrao;
+
+  let hero = umDe(b.hero, HEROS_VALIDOS, fallback.hero) as HeroLayout;
+  // Heros com foto exigem foto real disponível.
+  if (!temFoto && (hero === 'foto-cheia' || hero === 'cartao-flutuante')) hero = 'split';
+
+  const fb = (b.formatos ?? {}) as Record<string, unknown>;
+  const formatos: Record<string, string> = {};
+  for (const [chave, opcoes] of Object.entries(FORMATOS_VALIDOS)) {
+    formatos[chave] = umDe(fb[chave], opcoes, fallback.formatos[chave]);
+  }
+  return {
+    conceito:
+      typeof b.conceito === 'string' && b.conceito.trim().length > 3
+        ? b.conceito.trim().slice(0, 140)
+        : fallback.conceito,
+    hero,
+    cantos: umDe(b.cantos, ['vivos', 'suaves', 'redondos'], fallback.cantos) as DesignSite['cantos'],
+    divisores: umDe(b.divisores, ['retos', 'curva', 'onda'], fallback.divisores) as DesignSite['divisores'],
+    fundoAlternado: typeof b.fundoAlternado === 'boolean' ? b.fundoAlternado : fallback.fundoAlternado,
+    faixaCta: typeof b.faixaCta === 'boolean' ? b.faixaCta : fallback.faixaCta,
+    formatos,
+  };
+}
+
+/**
+ * Instrução do DIRETOR DE CRIAÇÃO (STEP 9). A IA pensa como programador
+ * front-end sénior + diretor de arte: parte do MODELO do negócio (como ele
+ * ganha dinheiro, o que o cliente precisa FAZER no site), decide o layout
+ * do hero, o formato de CADA seção e os acabamentos — e justifica no
+ * conceito. Responde SOMENTE com JSON.
+ */
+function instrucaoDesign(
+  dados: DadosEmpresa,
+  blueprint: Blueprint,
+  temFoto: boolean,
+  chavesSecoes: string[],
+): string {
+  const formatosSecoes = chavesSecoes
+    .filter((c) => c !== 'hero' && FORMATOS_VALIDOS[c])
+    .map((c) => `- ${c}: ${FORMATOS_VALIDOS[c].join(' | ')}`)
+    .join('\n');
+  return `
+Você é diretor de arte + programador front-end sénior premiado. Vais DESENHAR o site do negócio abaixo — não escrever textos (isso já está feito), mas decidir LAYOUT e ESTRUTURA como um profissional: o que o site deve conter, em que ordem visual, com que formato cada parte, para converter visitantes em contactos. Responda SOMENTE com um JSON válido (sem markdown, sem código, sem emojis).
+
+NEGÓCIO:
+- Nome: ${dados.nome} (${blueprint.specific_type} — ${dados.nicho})
+- Cidade: ${dados.cidade} · Modelo: ${blueprint.business_model}
+- Clientes precisam: ${blueprint.customer_needs.join('; ')}
+- Solução: ${blueprint.recommended_solution}
+- Clima visual: ${blueprint.design_direction.mood} (cor principal ${blueprint.design_direction.primario})
+- Seções decididas (aparecem nesta ordem): ${chavesSecoes.join(', ')}
+- Fotos reais disponíveis: ${temFoto ? 'sim' : 'não'}
+
+VOCABULÁRIO DE HERO (escolha 1 e JUSTIFIQUE no conceito):
+- foto-cheia: foto fullscreen de fundo + texto central gigante (impacto emocional; ideal p/ comida, hotel, estética)${temFoto ? '' : ' — PROIBIDO aqui (sem fotos)'}
+- split: texto à esquerda + foto à direita (clássico que converte; ideal p/ serviços com prova visual)
+- editorial: tipografia enorme, quase sem foto (sofisticado; ideal p/ advocacia, imobiliária premium, clínica)}
+- cartao-flutuante: foto em cartão + cartão branco flutuante com a oferta (moderno; ideal p/ salão, dentista, oficina)${temFoto ? '' : ' — PROIBIDO aqui (sem fotos)'}
+- faixa: faixa com padrão + conteúdo direto (ousado; ideal p/ entrega, fast-food, promoções)}
+- centro: texto centrado sem foto, CTA gigante (limpo; ideal p/ orçamento, serviços técnicos)}
+
+FORMATOS POR SEÇÃO (escolha 1 por seção listada):
+${formatosSecoes || '(nenhuma seção com formato variável)'}
+
+ACABAMENTOS:
+- cantos: vivos (cantos retos, técnico) | suaves (padrão amigável) | redondos (acolhedor/lúdico)
+- divisores: retos | curva | onda (transição decorativa no fim do hero)
+- fundoAlternado: true alterna o fundo das seções (ritmo) — use quando houver 5+ seções; false mantém tudo limpo
+- faixaCta: true insere uma faixa de conversão (chamada + botão) no meio da página — use quando a conversão principal for WhatsApp/pedido
+
+Formato exato do JSON:
+{
+  "conceito": "a tua decisão de design em 1 frase (ex.: 'Hero editorial com tipografia gigante porque o cliente da imobiliária compra confiança, não fotos')",
+  "hero": "um dos 6 acima",
+  "cantos": "vivos|suaves|redondos",
+  "divisores": "retos|curva|onda",
+  "fundoAlternado": true,
+  "faixaCta": true,
+  "formatos": {"catalogo": "lista", "servicos": "linhas", "...": "..."}
+}
+
+REGRAS:
+- Pensa como programador: o formato deve servir o CONTEÚDO (menu longo pede lista; 3 serviços fortes pedem cartões; prova social pede faixa; FAQ longo pede 2 colunas). Formato errado para o conteúdo é pior que o padrão.
+- PROIBIDO escolher tudo no formato mais comum: pelo menos 2 seções devem usar um formato que NÃO seja o primeiro da lista.
+- "formatos" deve conter TODAS as seções listadas acima (exceto hero).
+- Responda apenas com o JSON — começa em { e termina em }.
+`.trim();
+}
+
+/**
+ * STEP 9 — o diretor de criação desenha o site. Sem LLM ou com resposta
+ * inválida, vale o fallback determinístico com variedade.
+ */
+export async function desenharSite(
+  dados: DadosEmpresa,
+  blueprint: Blueprint,
+  temFoto: boolean,
+): Promise<DesignSite> {
+  const fallback = designPadrao(dados, blueprint, temFoto);
+  const chavesSecoes = construirPlano(blueprint, dados).secoes.map((s) => s.chave);
+  const texto = await chamarLLM(
+    'Você é diretor de arte e programador front-end sénior. Responde SOMENTE com JSON válido, sem markdown, sem código, sem emojis.',
+    instrucaoDesign(dados, blueprint, temFoto, chavesSecoes),
+    1400,
+    0.8,
+  );
+  if (!texto) return fallback;
+  const bruto = extrairJson<unknown>(texto);
+  if (!bruto) return fallback;
+  return validarDesign(bruto, fallback, temFoto);
+}
