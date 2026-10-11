@@ -60,6 +60,50 @@ async function cobrarCotaSite(user_id: string): Promise<number> {
 
 export const landingPagesRouter = Router();
 
+/**
+ * GET /api/landing-pages — sites gerados pelo usuário (com dados do lead).
+ * Alimenta a página "Websites" do painel.
+ */
+landingPagesRouter.get('/', async (request, response, next) => {
+  try {
+    const user = (request as AuthedRequest).user;
+    if (!user) throw new HttpError(401, 'Não autenticado.');
+
+    const { data, error } = await supabaseAdmin
+      .from('landing_pages')
+      .select('id, lead_id, created_at, published, slug, published_at, leads ( id, name, phone, address, status )')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    if (error) throw new HttpError(500, 'Falha ao carregar os sites.');
+
+    const sites = (data ?? []).map((row) => {
+      const lead = Array.isArray(row.leads) ? row.leads[0] : row.leads;
+      return {
+        id: row.id as string,
+        leadId: row.lead_id as string,
+        criadoEm: row.created_at as string,
+        publicado: Boolean(row.published),
+        slug: (row.slug as string | null) ?? null,
+        urlPublica: row.published && row.slug ? `/s/${row.slug}` : null,
+        publicadoEm: (row.published_at as string | null) ?? null,
+        lead: lead
+          ? {
+              id: lead.id as string,
+              name: lead.name as string,
+              phone: (lead.phone as string | null) ?? null,
+              address: (lead.address as string | null) ?? null,
+            }
+          : null,
+        previewUrl: `/api/landing-pages/${row.lead_id}/preview?st=${assinaturaPreview(row.lead_id as string, user.id)}`,
+      };
+    });
+
+    response.json({ sites });
+  } catch (error) {
+    next(error);
+  }
+});
+
 interface LeadRow {
   id: string;
   user_id: string;

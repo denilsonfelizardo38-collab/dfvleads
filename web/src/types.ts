@@ -66,6 +66,28 @@ export interface Lead {
   reviews: number | null;
   status: LeadStatus;
   seen: boolean;
+  lat?: number | null;
+  lng?: number | null;
+}
+
+/** Lead da listagem global (GET /api/leads) — inclui origem e coordenadas. */
+export interface LeadLista extends Lead {
+  createdAt: string;
+  nicho: string;
+  cidade: string;
+}
+
+/** Site gerado (GET /api/landing-pages). */
+export interface SiteGerado {
+  id: string;
+  leadId: string;
+  criadoEm: string;
+  publicado: boolean;
+  slug: string | null;
+  urlPublica: string | null;
+  publicadoEm: string | null;
+  previewUrl: string;
+  lead: { id: string; name: string; phone: string | null; address: string | null } | null;
 }
 
 export interface SearchSummary {
@@ -101,6 +123,8 @@ export interface SearchResponse {
 
 export interface Profile {
   email: string;
+  /** Nome exibido no dashboard ("Olá, {nome}"). Pode vir vazio. */
+  nome?: string;
   plan: Plan;
   credits: number;
   totalSearches: number;

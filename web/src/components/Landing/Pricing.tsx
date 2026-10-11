@@ -54,10 +54,10 @@ export default function Pricing() {
   return (
     <section id="precos" className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold text-white sm:text-4xl">Preços simples</h2>
+        <h2 className="text-3xl font-bold text-white sm:text-4xl">Escolha o plano</h2>
         <p className="mt-3 text-slate-400">
-          Conta nova: 1 busca + 1 site grátis. Depois, escolha o plano — pagamento por Binance
-          (USDT) ou PayPal, e o plano ativa sozinho.
+          O mais indicado para o seu crescimento. Conta nova: 1 busca + 1 site grátis. Pagamento
+          por Binance (USDT) ou PayPal — e o plano ativa sozinho.
         </p>
       </div>
 

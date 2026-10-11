@@ -1,7 +1,0 @@
-{
-  "whisper_modelo": "small",
-  "tts_voz": "pt-BR-AntonioNeural",
-  "vad_limiar": 0.008,
-  "wake_limiar": 0.35,
-  "barge_in": true
-}

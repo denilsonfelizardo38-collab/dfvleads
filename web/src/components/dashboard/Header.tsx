@@ -5,6 +5,7 @@ import { useToast } from '../../contexts/ToastContext.tsx';
 import { api } from '../../lib/api.ts';
 import Logo from '../Logo.tsx';
 import Icon from '../ui/Icon.tsx';
+import { initials } from '../../lib/format.ts';
 import type { Notificacao, Profile } from '../../types.ts';
 
 interface HeaderProps {
@@ -36,99 +37,109 @@ export default function Header({ profile }: HeaderProps) {
     };
   }, []);
 
-  async function abrirSininho() {
-    setAberto((valor) => !valor);
-    if (!aberto && notificacoes.some((n) => !n.read)) {
-      try {
-        await api.marcarLidas();
-        setNotificacoes((atuais) => atuais.map((n) => ({ ...n, read: true })));
-      } catch {
-        // ignora
-      }
+  const naoLidas = notificacoes.filter((notificacao) => !notificacao.read).length;
+
+  async function handleMarcarLidas() {
+    if (naoLidas === 0) return;
+    try {
+      await api.marcarLidas();
+      setNotificacoes((lista) => lista.map((notificacao) => ({ ...notificacao, read: true })));
+    } catch {
+      toast('error', 'Não foi possível marcar as notificações.');
     }
   }
 
-  async function handleLogout() {
+  async function handleSignOut() {
     await signOut();
-    toast('info', 'Sessão encerrada.');
-    navigate('/', { replace: true });
+    navigate('/login', { replace: true });
   }
 
-  const creditos = profile?.credits ?? 0;
-  const naoLidas = notificacoes.filter((n) => !n.read).length;
-  const plano = profile?.planoAtivo ? profile?.planoInfo ?? null : null;
-  // Sem plano pago: trial de conta nova = 1 site grátis.
-  const sitesRestantes = plano
-    ? Math.max(0, plano.sites - (profile?.sitesUsed ?? 0))
-    : Math.max(0, 1 - (profile?.sitesUsed ?? 0));
+  const nome = (profile?.nome ?? '').trim() || profile?.email?.split('@')[0] || '—';
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-white/10 bg-night-950/80 px-4 backdrop-blur sm:px-6">
-      <div className="flex items-center gap-3 md:hidden">
-        <Logo to="/dashboard" />
-      </div>
-
-      <div className="hidden md:block">
-        <p className="text-sm text-slate-400">
-          <span className={`font-bold ${creditos > 0 ? 'text-brand-500' : 'text-red-400'}`}>
-            {creditos} {creditos === 1 ? 'busca' : 'buscas'}
-          </span>
-          <span className="text-slate-500">
-            {' '}
-            · <span className="font-bold text-white">{sitesRestantes}</span>{' '}
-            {sitesRestantes === 1 ? 'site restante' : 'sites restantes'}
-            {plano ? '' : ' (trial)'}
-          </span>
-        </p>
-      </div>
-
-      <div className="flex items-center gap-2 md:hidden">
-        <span
-          className={`rounded-full px-3 py-1 text-xs font-bold ${creditos > 0 ? 'bg-brand-500/15 text-brand-500' : 'bg-red-500/15 text-red-400'}`}
-        >
-          {creditos} buscas
-        </span>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => void abrirSininho()}
-            className="relative rounded-lg p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
-            aria-label="Notificações"
-          >
-            <Icon name="alert" className="h-4.5 w-4.5" />
-            {naoLidas > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-brand-500 px-1 text-[10px] font-bold text-white">
-                {naoLidas}
-              </span>
-            )}
-          </button>
-          {aberto && (
-            <div className="absolute right-0 top-11 w-80 overflow-hidden rounded-2xl border border-white/10 bg-night-900 shadow-2xl">
-              <p className="border-b border-white/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-slate-500">
-                Notificações
-              </p>
-              <div className="max-h-80 overflow-y-auto">
-                {notificacoes.length === 0 && (
-                  <p className="px-4 py-6 text-center text-xs text-slate-500">Nada por aqui ainda.</p>
-                )}
-                {notificacoes.map((n) => (
-                  <div key={n.id} className={`border-b border-white/5 px-4 py-3 ${n.read ? '' : 'bg-brand-500/5'}`}>
-                    <p className="text-sm font-bold text-white">{n.titulo}</p>
-                    <p className="mt-0.5 text-xs text-slate-400">{n.corpo}</p>
-                    <p className="mt-1 text-[10px] text-slate-600">{new Date(n.created_at).toLocaleString('pt-BR')}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-night-950/80 backdrop-blur">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+        {/* Logo apenas no mobile (desktop tem a logo na sidebar) */}
+        <div className="md:hidden">
+          <Logo to="/dashboard" />
         </div>
-        <span className="hidden text-xs text-slate-500 sm:block">{profile?.email}</span>
-        <button type="button" onClick={handleLogout} className="btn-secondary px-3.5! py-2! text-xs">
-          Sair
-        </button>
+
+        {/* Créditos + sino + avatar */}
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          {profile?.planoInfo && (
+            <span className="hidden rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-400 sm:inline">
+              {profile.planoInfo.nome}
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200">
+            <Icon name="credit" className="h-3.5 w-3.5 text-brand-400" />
+            {profile?.credits ?? '—'}
+          </span>
+
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => {
+                setAberto((valor) => !valor);
+                if (!aberto) void handleMarcarLidas();
+              }}
+              className="relative rounded-lg p-2 text-slate-400 transition hover:bg-white/5 hover:text-white"
+              aria-label="Notificações"
+            >
+              <Icon name="bell" className="h-4.5 w-4.5" />
+              {naoLidas > 0 && (
+                <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-brand-500 px-1 text-[10px] font-bold text-night-950">
+                  {naoLidas}
+                </span>
+              )}
+            </button>
+
+            {aberto && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setAberto(false)} />
+                <div className="animate-fade-up absolute right-0 z-50 mt-2 w-72 rounded-2xl border border-white/10 bg-night-900 p-2 shadow-2xl">
+                  <p className="px-3 py-2 text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Notificações
+                  </p>
+                  <div className="max-h-72 overflow-y-auto">
+                    {notificacoes.length === 0 && (
+                      <p className="px-3 py-4 text-center text-xs text-slate-500">
+                        Sem notificações.
+                      </p>
+                    )}
+                    {notificacoes.map((notificacao) => (
+                      <div
+                        key={notificacao.id}
+                        className={`rounded-xl px-3 py-2.5 ${notificacao.read ? 'opacity-60' : 'bg-white/[0.03]'}`}
+                      >
+                        <p className="text-sm font-semibold text-white">{notificacao.titulo}</p>
+                        <p className="mt-0.5 text-xs text-slate-400">{notificacao.corpo}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2.5 border-l border-white/10 pl-3">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-xs font-extrabold text-white">
+              {initials(nome)}
+            </span>
+            <div className="hidden leading-tight sm:block">
+              <p className="max-w-36 truncate text-sm font-semibold text-white">{nome}</p>
+              <p className="max-w-36 truncate text-[11px] text-slate-500">{profile?.email ?? ''}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void handleSignOut()}
+              className="rounded-lg p-2 text-slate-400 transition hover:bg-white/5 hover:text-white"
+              aria-label="Sair"
+            >
+              <Icon name="logout" className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
       </div>
     </header>
   );

@@ -58,6 +58,19 @@ export const api = {
     request<{ search: import('../types.ts').SearchRecord; leads: import('../types.ts').Lead[] }>(
       `/leads/${searchId}`,
     ),
+  meusLeads: (options: { limite?: number; offset?: number; filtro?: string } = {}) => {
+    const params = new URLSearchParams();
+    if (options.limite) params.set('limite', String(options.limite));
+    if (options.offset) params.set('offset', String(options.offset));
+    if (options.filtro) params.set('filtro', options.filtro);
+    const query = params.toString();
+    return request<{ leads: import('../types.ts').LeadLista[]; total: number }>(
+      `/leads${query ? `?${query}` : ''}`,
+    );
+  },
+  meusSites: () => request<{ sites: import('../types.ts').SiteGerado[] }>('/landing-pages'),
+  atualizarPerfil: (nome: string) =>
+    request<{ ok: boolean; nome: string }>('/me', { method: 'PATCH', body: JSON.stringify({ nome }) }),
   consume: (input: { niche: string; city: string }) =>
     request<{ enough: boolean; billable: number; credits: number }>('/credits/consume', {
       method: 'POST',

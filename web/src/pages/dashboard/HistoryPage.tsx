@@ -49,7 +49,7 @@ export default function HistoryPage({ onOpen }: HistoryPageProps) {
       ) : searches.length === 0 ? (
         <div className="card text-center">
           <p className="text-slate-400">Você ainda não fez buscas.</p>
-          <Link to="/dashboard" className="btn-primary mt-4">
+          <Link to="/dashboard/pesquisar" className="btn-primary mt-4">
             Fazer primeira busca
           </Link>
         </div>

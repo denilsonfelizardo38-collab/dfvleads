@@ -7,25 +7,18 @@ export default function Navbar() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Logo />
         <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
-          <a href="#como-funciona" className="transition hover:text-white">Como funciona</a>
+          <a href="#topo" className="transition hover:text-white">Início</a>
+          <a href="#como-funciona" className="transition hover:text-white">Recursos</a>
           <a href="#precos" className="transition hover:text-white">Preços</a>
-          <a href="#faq" className="transition hover:text-white">FAQ</a>
-          <a
-            href="https://denilsonfelizardo38-collab.github.io/DFVCode/"
-            target="_blank"
-            rel="noreferrer"
-            className="transition hover:text-white"
-          >
-            DFVCode
-          </a>
+          <a href="#faq" className="transition hover:text-white">Sobre</a>
         </nav>
         <div className="flex items-center gap-3">
           <Link to="/login" className="text-sm font-medium text-slate-300 transition hover:text-white">
             Entrar
           </Link>
           <Link to="/registrar" className="btn-primary whitespace-nowrap px-4! py-2! text-xs sm:text-sm">
-            <span className="sm:hidden">Criar conta</span>
-            <span className="hidden sm:inline">Criar conta grátis</span>
+            <span className="sm:hidden">Registar</span>
+            <span className="hidden sm:inline">Registar</span>
           </Link>
         </div>
       </div>

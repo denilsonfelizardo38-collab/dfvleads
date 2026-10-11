@@ -50,6 +50,8 @@ export interface LeadDTO {
   reviews: number | null;
   status: LeadStatus;
   seen: boolean; // já retornado em busca anterior do usuário (dedupe)
+  lat?: number | null;
+  lng?: number | null;
 }
 
 export interface SearchRecord {

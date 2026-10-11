@@ -18,6 +18,16 @@ export default function Footer() {
             <li><a href="#como-funciona" className="transition hover:text-slate-300">Como funciona</a></li>
             <li><a href="#precos" className="transition hover:text-slate-300">Preços</a></li>
             <li><a href="#faq" className="transition hover:text-slate-300">FAQ</a></li>
+            <li>
+              <a
+                href="https://denilsonfelizardo38-collab.github.io/DFVCode/"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-slate-300"
+              >
+                DFVCode
+              </a>
+            </li>
           </ul>
         </div>
         <div className="text-sm">

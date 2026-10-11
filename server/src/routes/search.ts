@@ -19,7 +19,7 @@ searchRouter.get('/me', async (request, response, next) => {
 
     const { data, error } = await supabaseAdmin
       .from('profiles')
-      .select('plan, credits, total_searches, total_leads, is_admin, blocked, plan_expires, sites_used, searches_used, period_start')
+      .select('plan, credits, total_searches, total_leads, is_admin, blocked, plan_expires, sites_used, searches_used, period_start, full_name')
       .eq('user_id', user.id)
       .single();
 
@@ -29,6 +29,7 @@ searchRouter.get('/me', async (request, response, next) => {
     const expirado = !data.plan_expires || new Date(data.plan_expires) < new Date();
     response.json({
       email: user.email ?? '',
+      nome: (data.full_name as string | null) ?? '',
       plan: data.plan,
       credits: data.credits,
       totalSearches: data.total_searches,
@@ -174,7 +175,7 @@ searchRouter.post('/search', async (request, response, next) => {
     const { data: insertedRows, error: leadsError } = await supabaseAdmin
       .from('leads')
       .insert(rows)
-      .select('id, place_id, name, phone, address, website, rating, reviews, status');
+      .select('id, place_id, name, phone, address, website, rating, reviews, status, lat, lng');
     if (leadsError) throw new HttpError(500, `Falha ao salvar leads: ${leadsError.message}`);
 
     const leads: LeadDTO[] = (insertedRows ?? []).map((row) => ({
@@ -188,6 +189,8 @@ searchRouter.post('/search', async (request, response, next) => {
       reviews: (row.reviews as number | null) ?? null,
       status: row.status as LeadDTO['status'],
       seen: seenSet.has(row.place_id as string),
+      lat: (row.lat as number | null) ?? null,
+      lng: (row.lng as number | null) ?? null,
     }));
 
     const { error: updateError } = await supabaseAdmin
@@ -226,6 +229,24 @@ searchRouter.post('/search', async (request, response, next) => {
       },
       leads,
     });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/** PATCH /me — atualiza dados do perfil (nome exibido no dashboard). */
+searchRouter.patch('/me', async (request, response, next) => {
+  try {
+    const user = await getAuthUser(request);
+    if (!user) throw new HttpError(401, 'Sessão inválida ou expirada.');
+
+    const nome = cleanText(request.body?.nome, 80);
+    const { error } = await supabaseAdmin
+      .from('profiles')
+      .update({ full_name: nome || null, updated_at: new Date().toISOString() })
+      .eq('user_id', user.id);
+    if (error) throw new HttpError(500, 'Falha ao atualizar o perfil. Rode supabase/migration_admin_billing.sql.');
+    response.json({ ok: true, nome });
   } catch (error) {
     next(error);
   }

@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
 import Icon from '../ui/Icon.tsx';
 
-const AUDIENCES = ['Agências web', 'Designers', 'Gestores de tráfego', 'Consultores'];
-
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
+    <section id="topo" className="relative overflow-hidden">
       {/* brilhos de fundo verde/roxo */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-brand-500/15 blur-3xl" />
@@ -16,22 +14,24 @@ export default function Hero() {
         <div className="animate-fade-up mx-auto max-w-3xl text-center">
           <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-brand-400">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-500" />
-            5 leads grátis ao criar conta
+            Para Programadores e Vibe Coders
           </span>
 
           <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">
-            Encontre empresas <span className="text-brand-400">SEM SITE</span> em segundos — e
-            transforme cada uma em <span className="bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">cliente</span>.
+            Encontre empresas{' '}
+            <span className="bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">
+              que precisam de um site.
+            </span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-base text-slate-400 sm:text-lg">
-            Digite o nicho e a cidade. Buscamos no Google Maps as empresas sem website registrado,
-            entregamos a lista pronta — e geramos a landing page de cada uma com um clique.
+            O DFVLeads ajuda-o a encontrar empresas que ainda não têm website, para que possa
+            oferecer os seus serviços e gerar rendimento a partir do que sabe fazer — programar.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link to="/registrar" className="btn-primary w-full sm:w-auto">
-              Criar conta grátis
+              Começar Agora
               <Icon name="arrow-right" className="h-4 w-4" />
             </Link>
             <a href="#como-funciona" className="btn-secondary w-full sm:w-auto">
@@ -40,10 +40,12 @@ export default function Hero() {
           </div>
 
           <p className="mt-6 text-sm text-slate-500">
-            Ideal para <span className="text-slate-300">{AUDIENCES.join(', ')}</span>.
+            Pesquisa por cidade, bairro e nicho · Apenas empresas sem website · Contacto directo
+            via WhatsApp
           </p>
           <p className="mx-auto mt-3 max-w-xl text-xs text-slate-600">
-            Uma plataforma <span className="font-semibold text-slate-400">DFVCode</span> — Tecnologia &amp; Soluções
+            Trial grátis: <span className="font-semibold text-slate-400">1 busca + 1 site</span> ao
+            criar conta · Uma plataforma <span className="font-semibold text-slate-400">DFVCode</span> — Tecnologia &amp; Soluções
           </p>
         </div>
 
