@@ -28,7 +28,7 @@ export default function Register() {
         toast('info', 'Conta criada! Confirme seu email para entrar.');
         navigate('/login', { replace: true });
       } else {
-        toast('success', 'Conta criada — você tem 1 crédito de busca grátis!');
+        toast('success', 'Conta criada — você tem 1 busca + 1 site grátis!');
         navigate('/dashboard', { replace: true });
       }
     } catch (error_) {
@@ -39,15 +39,21 @@ export default function Register() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="animate-fade-up w-full max-w-md">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4">
+      {/* brilhos de fundo */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 left-1/3 h-96 w-96 rounded-full bg-brand-500/15 blur-3xl" />
+        <div className="absolute -bottom-32 right-1/4 h-80 w-80 rounded-full bg-brand-600/10 blur-3xl" />
+      </div>
+
+      <div className="animate-fade-up relative w-full max-w-md">
         <div className="mb-8 flex justify-center">
           <Logo />
         </div>
-        <div className="card">
+        <div className="card border-white/10 bg-night-900/80 p-6! backdrop-blur sm:p-7!">
           <h1 className="text-2xl font-bold text-white">Criar conta grátis</h1>
           <p className="mt-1 text-sm text-slate-400">
-            5 leads grátis para encontrar seus primeiros clientes sem site.
+            1 busca + 1 site grátis para encontrar seus primeiros clientes sem site.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -96,7 +102,7 @@ export default function Register() {
 
           <p className="mt-5 text-center text-sm text-slate-400">
             Já tem conta?{' '}
-            <Link to="/login" className="font-medium text-brand-500 transition hover:text-brand-500/80">
+            <Link to="/login" className="font-medium text-brand-400 transition hover:text-brand-500">
               Entrar
             </Link>
           </p>

@@ -35,7 +35,7 @@ const TEMPLATES: Template[] = [
     categoria: 'Loja',
     nicho: 'Loja',
     descricao: 'Vitrine de produtos, destaques e contactos rápidos.',
-    gradiente: 'from-violet-500/80 to-indigo-600/80',
+    gradiente: 'from-violet-500/80 to-fuchsia-600/80',
   },
   {
     nome: 'Clínica Care',
@@ -49,7 +49,7 @@ const TEMPLATES: Template[] = [
     categoria: 'Turismo',
     nicho: 'Hotel',
     descricao: 'Acomodações, tarifas, mapa e reserva direta.',
-    gradiente: 'from-sky-500/80 to-blue-600/80',
+    gradiente: 'from-cyan-500/80 to-teal-600/80',
   },
   {
     nome: 'Studio Snap',

@@ -9,7 +9,7 @@ export default function Footer() {
           <Logo />
           <p className="mt-4 max-w-xs text-sm text-slate-500">
             Encontre empresas sem site no Google Maps, gere o site delas e transforme cada lead em
-            cliente. Uma plataforma DFVCode.
+            cliente.
           </p>
         </div>
         <div className="text-sm">

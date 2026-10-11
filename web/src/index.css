@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  /* Escala verde-preto (base escura do painel, estilo MapaLeads) */
-  --color-night-950: #050806;
-  --color-night-900: #0a0f0c;
-  --color-night-800: #0e1611;
-  --color-night-700: #14201a;
-  --color-night-600: #1b2b22;
+  /* Escala neutra escura — visual DFVLeads (fundo quase preto, cartões acinzentados) */
+  --color-night-950: #0a0a0c;
+  --color-night-900: #101013;
+  --color-night-800: #17171a;
+  --color-night-700: #1f1f23;
+  --color-night-600: #2a2a2f;
   /* Verde esmeralda DFVLeads */
   --color-brand-400: #4ade80;
   --color-brand-500: #22c55e;
@@ -25,6 +25,22 @@
   ::selection {
     @apply bg-brand-500/40 text-white;
   }
+  /* Scrollbar discreta no tom do tema */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-night-950);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-night-600);
+    border-radius: 999px;
+    border: 2px solid var(--color-night-950);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a41;
+  }
 }
 
 @layer utilities {
@@ -41,7 +57,7 @@
     @apply w-full rounded-xl border border-white/10 bg-night-900 px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20;
   }
   .card {
-    @apply rounded-2xl border border-white/10 bg-night-800/70 p-5 shadow-lg shadow-black/20;
+    @apply rounded-2xl border border-white/10 bg-night-800 p-5 shadow-lg shadow-black/30;
   }
 }
 

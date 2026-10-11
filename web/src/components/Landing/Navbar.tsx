@@ -8,9 +8,9 @@ export default function Navbar() {
         <Logo />
         <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
           <a href="#topo" className="transition hover:text-white">Início</a>
-          <a href="#como-funciona" className="transition hover:text-white">Recursos</a>
+          <a href="#como-funciona" className="transition hover:text-white">Como funciona</a>
           <a href="#precos" className="transition hover:text-white">Preços</a>
-          <a href="#faq" className="transition hover:text-white">Sobre</a>
+          <a href="#faq" className="transition hover:text-white">FAQ</a>
         </nav>
         <div className="flex items-center gap-3">
           <Link to="/login" className="text-sm font-medium text-slate-300 transition hover:text-white">

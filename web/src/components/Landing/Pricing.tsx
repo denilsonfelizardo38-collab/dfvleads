@@ -65,7 +65,11 @@ export default function Pricing() {
         {PLANS.map((plan) => (
           <div
             key={plan.name}
-            className={`card relative flex flex-col ${plan.highlight ? 'border-brand-500/40 bg-brand-500/[0.06] shadow-brand-500/10' : ''}`}
+            className={`card relative flex flex-col transition hover:-translate-y-1 ${
+              plan.highlight
+                ? 'border-brand-500/40 bg-night-800 shadow-xl shadow-brand-500/10 ring-1 ring-brand-500/30'
+                : 'hover:border-white/20'
+            }`}
           >
             {plan.highlight && (
               <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-500 px-3 py-1 text-xs font-bold text-night-950">
