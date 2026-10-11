@@ -193,17 +193,36 @@ const LIMITE_PADRAO = 60;
 const LIMITE_PAIS = 20;
 
 /**
- * Rate-limit leve: o Overpass público aplica 429 quando chegam chamadas
- * em rajada; 3s entre chamadas do processo e espera extra em 429 resolve.
+ * Rate-limit: o Overpass/Nominatim públicos aplicam 429 quando há rajadas
+ * (no Render o IP de saída é partilhado com outros apps, então o 429 é
+ * frequente). Estratégia: intervalo entre chamadas, espera com jitter
+ * honrando Retry-After, round-robin nos espelhos (cada um tem cota própria)
+ * e mensagens limpas — o corpo bruto do erro NUNCA vaza para o usuário.
  */
 let ultimaChamadaOverpass = 0;
 const INTERVALO_OVERPASS_MS = 3000;
-const ESPERA_429_MS = 5000;
 const ESPERA_FALHA_MS = 3000;
+/** Próximo espelho a tentar primeiro (round-robin por chamada). */
+let proximoEndpoint = 0;
+
+/** Espera com jitter para não sincronizar rajadas com outros clientes. */
+function esperaComJitter(baseMs: number): Promise<void> {
+  const ms = baseMs + Math.floor(Math.random() * 2000);
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 async function aguardarVezOverpass(): Promise<void> {
   const espera = INTERVALO_OVERPASS_MS - (Date.now() - ultimaChamadaOverpass);
   if (espera > 0) await new Promise((r) => setTimeout(r, espera));
   ultimaChamadaOverpass = Date.now();
+}
+
+/** Nominatim: a política de uso pede máx. 1 req/s por IP. */
+let ultimaChamadaNominatim = 0;
+async function aguardarVezNominatim(): Promise<void> {
+  const espera = 1200 - (Date.now() - ultimaChamadaNominatim);
+  if (espera > 0) await new Promise((r) => setTimeout(r, espera));
+  ultimaChamadaNominatim = Date.now();
 }
 
 async function fetchJson<T>(url: string, init?: RequestInit, timeoutMs = 20000): Promise<T> {
@@ -214,27 +233,61 @@ async function fetchJson<T>(url: string, init?: RequestInit, timeoutMs = 20000):
   });
   if (!resposta.ok) {
     const texto = await resposta.text().catch(() => '');
-    throw Object.assign(new Error(`OpenStreetMap ${resposta.status}: ${texto.slice(0, 160)}`), {
+    const retryAfterSeg = Number(resposta.headers.get('retry-after')) || 0;
+    // Detalhe bruto só no log do servidor — o usuário recebe mensagem limpa.
+    console.warn(`[osm] HTTP ${resposta.status} em ${url} — ${texto.slice(0, 200)}`);
+    throw Object.assign(new Error(`OpenStreetMap indisponível (HTTP ${resposta.status}).`), {
       status: 502,
+      httpStatus: resposta.status,
+      retryAfterSeg,
     });
   }
   return (await resposta.json()) as T;
 }
 
-/** Cidade → bbox + metadados (Nominatim, com cache de 6h). */
+/** Cidade → bbox + metadados (Nominatim, com cache de 6h e retry em 429/5xx). */
 async function localDaCidade(cidade: string): Promise<LocalOsm> {
   const chave = cidade.trim().toLowerCase();
   const emCache = cacheCidades.get(chave);
   if (emCache && emCache.expira > Date.now()) return emCache.valor;
 
-  const json = await fetchJson<
-    {
-      boundingbox?: string[];
-      addresstype?: string;
-      osm_type?: string;
-      osm_id?: number;
-    }[]
-  >(`${NOMINATIM}?q=${encodeURIComponent(cidade)}&format=jsonv2&limit=1`);
+  const url = `${NOMINATIM}?q=${encodeURIComponent(cidade)}&format=jsonv2&limit=1`;
+  let json:
+    | {
+        boundingbox?: string[];
+        addresstype?: string;
+        osm_type?: string;
+        osm_id?: number;
+      }[]
+    | null = null;
+  for (let tentativa = 1; tentativa <= 3; tentativa += 1) {
+    try {
+      await aguardarVezNominatim();
+      json = await fetchJson<
+        {
+          boundingbox?: string[];
+          addresstype?: string;
+          osm_type?: string;
+          osm_id?: number;
+        }[]
+      >(url);
+      break;
+    } catch (erro) {
+      const http = (erro as { httpStatus?: number }).httpStatus;
+      const podeRepetir = http === undefined || http === 429 || http >= 500;
+      if (tentativa >= 3 || !podeRepetir) break;
+      const retrySeg = (erro as { retryAfterSeg?: number }).retryAfterSeg ?? 0;
+      await esperaComJitter(http === 429 ? Math.max(retrySeg, 4) * 1000 : ESPERA_FALHA_MS);
+    }
+  }
+  if (!json) {
+    throw Object.assign(
+      new Error(
+        `Não consegui localizar "${cidade}" agora — o serviço de mapas está sobrecarregado. Aguarde 1-2 minutos e tente de novo. Nada foi cobrado.`,
+      ),
+      { status: 503 },
+    );
+  }
 
   const hit = json[0];
   if (!hit?.boundingbox || hit.boundingbox.length < 4) {
@@ -326,10 +379,11 @@ export async function buscarPeloNome(
   let hits: HitNominatim[] | null = null;
   for (let tentativa = 1; tentativa <= 2; tentativa += 1) {
     try {
+      await aguardarVezNominatim();
       hits = await fetchJson<HitNominatim[]>(url, undefined, 20000);
       break;
     } catch {
-      await new Promise((r) => setTimeout(r, 2000));
+      await esperaComJitter(2000);
     }
   }
   if (!hits) return null;
@@ -511,11 +565,15 @@ export async function buscarLugaresOsm(
   const { config } = await import('../env.ts');
   const prazo = Date.now() + config.overpassPrazoMs;
 
-  // Tenta o endpoint principal (2x), depois o espelho (2x) — 504/429/timeout
-  // no Overpass público são transitórios e uma nova tentativa costuma passar.
+  // Tenta os espelhos em round-robin (2x cada) — 429/504/timeout no
+  // Overpass público são transitórios e variar o primeiro espelho distribui
+  // a carga, já que cada espelho tem a sua própria cota. Honra Retry-After.
+  const ordem = OVERPASS_ENDPOINTS.map((_, i) => OVERPASS_ENDPOINTS[(proximoEndpoint + i) % OVERPASS_ENDPOINTS.length]);
+  proximoEndpoint += 1;
   let json: { elements?: ElementoOsm[] } | null = null;
   let ultimoErro: unknown = null;
-  for (const endpoint of OVERPASS_ENDPOINTS) {
+  let tudo429 = true;
+  for (const endpoint of ordem) {
     for (let tentativa = 1; tentativa <= 2; tentativa += 1) {
       if (Date.now() > prazo) break;
       try {
@@ -528,11 +586,11 @@ export async function buscarLugaresOsm(
         break;
       } catch (erro) {
         ultimoErro = erro;
-        if ((erro as { status?: number }).status === 429) {
-          await new Promise((r) => setTimeout(r, ESPERA_429_MS));
-        } else {
-          await new Promise((r) => setTimeout(r, ESPERA_FALHA_MS));
-        }
+        const http = (erro as { httpStatus?: number }).httpStatus;
+        if (http !== 429) tudo429 = false;
+        const retrySeg = (erro as { retryAfterSeg?: number }).retryAfterSeg ?? 0;
+        if (http === 429) await esperaComJitter(Math.max(retrySeg, 8) * 1000);
+        else await esperaComJitter(ESPERA_FALHA_MS);
       }
     }
     if (json) break;
@@ -553,12 +611,14 @@ export async function buscarLugaresOsm(
   if (!json) {
     const causa = (ultimoErro as Error)?.message ?? 'sem detalhes';
     const semRede = /fetch failed|connect|enotfound|econnreset|aborted due to timeout/i.test(causa);
-    const motivo = semRede
-      ? 'Não consegui acessar o serviço público de mapas agora (instabilidade na rede ou no serviço).'
-      : 'O serviço público de mapas está sobrecarregado neste momento.';
+    const motivo = tudo429
+      ? 'O serviço público de mapas está com muita gente ao mesmo tempo (limite de uso atingido).'
+      : semRede
+        ? 'Não consegui acessar o serviço público de mapas agora (instabilidade na rede ou no serviço).'
+        : 'O serviço público de mapas está sobrecarregado neste momento.';
     throw Object.assign(
       new Error(
-        `${motivo} Buscar por cidade específica costuma funcionar (ex.: "${nicho} em São Paulo") — e buscar por país volta a funcionar quando o serviço se recuperar. Nada foi cobrado.`,
+        `${motivo} Aguarde 1-2 minutos e tente de novo — buscar por cidade específica costuma passar mais rápido. Nada foi cobrado.`,
       ),
       { status: 503 },
     );
