@@ -35,6 +35,8 @@ services:
         sync: false
       - key: PAYPAL_SANDBOX
         value: "false"
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
       - key: BINANCE_PAY_KEY
         sync: false
       - key: BINANCE_PAY_SECRET

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { config } from './env.ts';
 import { errorHandler } from './lib/http.ts';
+import { requestLog } from './middleware/requestLog.ts';
 import { requireAuth } from './middleware/auth.ts';
 import { gateBloqueio } from './middleware/gate.ts';
 import { searchRateLimit } from './middleware/searchRateLimit.ts';
@@ -18,6 +19,9 @@ import { notificationsRouter } from './routes/notifications.ts';
 
 export function createApp(): express.Express {
   const app = express();
+
+  // Log estruturado + id de correlação em todas as requisições.
+  app.use(requestLog);
 
   // CORS: CORS_ORIGIN aceita VÁRIAS origens separadas por vírgula
   // (ex.: painel no localhost e na Vercel ao mesmo tempo).

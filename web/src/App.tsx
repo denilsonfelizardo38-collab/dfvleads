@@ -7,6 +7,8 @@ import Register from './pages/Register.tsx';
 import ResetPassword from './pages/ResetPassword.tsx';
 import ResetPasswordConfirm from './pages/ResetPasswordConfirm.tsx';
 import Dashboard from './pages/Dashboard.tsx';
+import Termos from './pages/Termos.tsx';
+import Privacidade from './pages/Privacidade.tsx';
 import Spinner from './components/ui/Spinner.tsx';
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -64,6 +66,8 @@ export default function App() {
         }
       />
       <Route path="/reset-confirm" element={<ResetPasswordConfirm />} />
+      <Route path="/termos" element={<Termos />} />
+      <Route path="/privacidade" element={<Privacidade />} />
       <Route
         path="/dashboard/*"
         element={

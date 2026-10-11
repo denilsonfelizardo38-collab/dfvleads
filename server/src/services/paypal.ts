@@ -94,3 +94,41 @@ export async function estadoOrdemPayPal(orderId: string): Promise<string | null>
   const json = (await resposta.json()) as { status?: string };
   return json.status ?? null;
 }
+
+/**
+ * Verifica a assinatura de um webhook na API do PayPal
+ * (POST /v1/notifications/verify-webhook-signature). Sem isto, qualquer um
+ * poderia forjar eventos e ativar planos sem pagar.
+ */
+export async function verificarWebhookPayPal(input: {
+  transmissionId: string;
+  transmissionTime: string;
+  certUrl: string;
+  authAlgo: string;
+  transmissionSig: string;
+  webhookId: string;
+  evento: unknown;
+}): Promise<boolean> {
+  try {
+    const acesso = await token();
+    const resposta = await fetch(`${API()}/v1/notifications/verify-webhook-signature`, {
+      method: 'POST',
+      signal: AbortSignal.timeout(20_000),
+      headers: { Authorization: `Bearer ${acesso}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        transmission_id: input.transmissionId,
+        transmission_time: input.transmissionTime,
+        cert_url: input.certUrl,
+        auth_algo: input.authAlgo,
+        transmission_sig: input.transmissionSig,
+        webhook_id: input.webhookId,
+        webhook_event: input.evento,
+      }),
+    });
+    if (!resposta.ok) return false;
+    const json = (await resposta.json()) as { verification_status?: string };
+    return json.verification_status === 'SUCCESS';
+  } catch {
+    return false;
+  }
+}

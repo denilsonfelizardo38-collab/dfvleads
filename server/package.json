@@ -16,7 +16,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jszip": "^3.10.1",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

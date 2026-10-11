@@ -25,7 +25,7 @@ export function isPositiveInt(value: unknown): boolean {
 /** Converte erros em JSON padronizado — deve ficar por último nas rotas. */
 export function errorHandler(
   error: unknown,
-  _request: Request,
+  request: Request,
   response: Response,
   _next: NextFunction,
 ): void {
@@ -33,6 +33,9 @@ export function errorHandler(
     ? (error as { status: number }).status
     : 500;
   const message = error instanceof Error ? error.message : 'Erro interno.';
-  if (status >= 500) console.error('[api]', error);
+  if (status >= 500) {
+    const id = (request as typeof request & { requestId?: string }).requestId ?? '-';
+    console.error('[api]', id, error);
+  }
   response.status(status).json({ error: message });
 }

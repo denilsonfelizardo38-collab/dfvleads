@@ -17,6 +17,7 @@ export interface Config {
   paypalClientId: string;
   paypalSecret: string;
   paypalSandbox: boolean;
+  paypalWebhookId: string;
   /** Binance Pay (Merchant). Vazio = Binance desativado. */
   binancePayKey: string;
   binancePaySecret: string;

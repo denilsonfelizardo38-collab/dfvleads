@@ -3,7 +3,9 @@ import { createHmac } from 'node:crypto';
 import { supabaseAdmin } from '../services/supabaseAdmin.ts';
 import { HttpError } from '../lib/http.ts';
 import { config, PLANOS, WHATSAPP_ADMIN, planoPelaChave } from '../env.ts';
-import { paypalAtivo, criarOrdemPayPal, capturarOrdemPayPal } from '../services/paypal.ts';
+import { pagamentoSchema, checkoutSchema } from '../lib/validate.ts';
+import { parseBody } from '../lib/validate.ts';
+import { paypalAtivo, criarOrdemPayPal, capturarOrdemPayPal, estadoOrdemPayPal, verificarWebhookPayPal } from '../services/paypal.ts';
 import { binanceAtivo, criarOrdemBinance } from '../services/binancePay.ts';
 import { ativarPlanoDoPedido } from '../services/planActivation.ts';
 import type { AuthedRequest } from '../types.ts';
@@ -26,14 +28,15 @@ billingRouter.post('/pagamentos', async (request, response, next) => {
     const user = (request as AuthedRequest).user;
     if (!user) throw new HttpError(401, 'Não autenticado.');
 
-    const planKey = String(request.body?.planKey ?? '');
-    const metodo = String(request.body?.metodo ?? 'binance').toLowerCase();
-    const referencia = String(request.body?.referencia ?? '').trim().slice(0, 120);
+    const { planKey, metodo, referencia } = parseBody(
+      pagamentoSchema,
+      request.body,
+      'Dados do pagamento inválidos.',
+    );
 
     const plano = planoPelaChave(planKey);
     if (!plano) throw new HttpError(400, 'Plano inválido.');
     if (!['binance', 'paypal'].includes(metodo)) throw new HttpError(400, 'Método inválido (binance ou paypal).');
-    if (referencia.length < 4) throw new HttpError(400, 'Informe o ID/hash da transferência para o admin conferir.');
 
     const { data: pedido, error } = await supabaseAdmin
       .from('payment_requests')
@@ -79,7 +82,8 @@ billingRouter.post('/checkout/paypal', async (request, response, next) => {
     if (!user) throw new HttpError(401, 'Não autenticado.');
     if (!paypalAtivo()) throw new HttpError(501, 'PayPal não configurado neste servidor.');
 
-    const plano = planoPelaChave(String(request.body?.planKey ?? ''));
+    const { planKey } = parseBody(checkoutSchema, request.body, 'Plano inválido.');
+    const plano = planoPelaChave(planKey);
     if (!plano) throw new HttpError(400, 'Plano inválido.');
 
     const { data: pedido, error } = await supabaseAdmin
@@ -135,9 +139,20 @@ export const paypalRetornoHandler = async (request: import('express').Request, r
       .eq('id', pedidoId)
       .single();
     if (!pedido) throw new HttpError(404, 'Pedido não encontrado.');
+    // O token do retorno tem de ser a order criada para ESTE pedido —
+    // sem esta amarração, um token válido de outro pedido ativava este.
+    if (pedido.provider_order_id && pedido.provider_order_id !== orderId) {
+      throw new HttpError(400, 'Retorno inválido.');
+    }
 
     if (pedido.status !== 'approved') {
-      const pago = await capturarOrdemPayPal(orderId);
+      let pago = await capturarOrdemPayPal(orderId);
+      if (!pago) {
+        // A captura falha se o PayPal já a fez (ex.: webhook ganhou a
+        // corrida) — nesse caso o estado COMPLETED também ativa o plano.
+        const estado = await estadoOrdemPayPal(orderId);
+        if (estado === 'COMPLETED') pago = true;
+      }
       if (pago) await ativarPlanoDoPedido(pedidoId);
     }
     response.redirect(302, `${config.appBaseUrl || ''}/dashboard/planos?pagamento=sucesso`);
@@ -153,6 +168,26 @@ export const paypalRetornoHandler = async (request: import('express').Request, r
  */
 export const paypalWebhookHandler = async (request: import('express').Request, response: import('express').Response, next: import('express').NextFunction) => {
   try {
+    // Sem webhook ID configurado, o webhook NÃO ativa nada (rede de
+    // segurança desligada) — a ativação continua pelo retorno com captura.
+    if (!config.paypalWebhookId) {
+      console.warn('[paypal] webhook recebido sem PAYPAL_WEBHOOK_ID configurado — ignorado.');
+      response.json({ received: true, verified: false });
+      return;
+    }
+    const verificado = await verificarWebhookPayPal({
+      transmissionId: String(request.headers['paypal-transmission-id'] ?? ''),
+      transmissionTime: String(request.headers['paypal-transmission-time'] ?? ''),
+      certUrl: String(request.headers['paypal-cert-url'] ?? ''),
+      authAlgo: String(request.headers['paypal-auth-algo'] ?? ''),
+      transmissionSig: String(request.headers['paypal-transmission-sig'] ?? ''),
+      webhookId: config.paypalWebhookId,
+      evento: request.body ?? {},
+    });
+    if (!verificado) {
+      response.status(401).json({ error: 'Assinatura inválida.' });
+      return;
+    }
     const evento = request.body ?? {};
     if (evento?.event_type === 'CHECKOUT.ORDER.APPROVED' || evento?.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
       const orderId = evento?.resource?.supplementary_data?.related_ids?.order_id ?? evento?.resource?.id;
@@ -181,7 +216,8 @@ billingRouter.post('/checkout/binance', async (request, response, next) => {
     if (!user) throw new HttpError(401, 'Não autenticado.');
     if (!binanceAtivo()) throw new HttpError(501, 'Binance Pay não configurado neste servidor.');
 
-    const plano = planoPelaChave(String(request.body?.planKey ?? ''));
+    const { planKey } = parseBody(checkoutSchema, request.body, 'Plano inválido.');
+    const plano = planoPelaChave(planKey);
     if (!plano) throw new HttpError(400, 'Plano inválido.');
 
     const { data: pedido, error } = await supabaseAdmin
@@ -224,13 +260,16 @@ export const binanceWebhookHandler = async (request: import('express').Request, 
     const nonce = String(request.headers['binancepay-nonce'] ?? '');
     const assinatura = String(request.headers['binancepay-signature'] ?? '');
 
-    if (config.binancePaySecret && corpoBruto && timestamp && nonce && assinatura) {
-      const payload = `${timestamp}\n${nonce}\n${corpoBruto}\n`;
-      const esperado = createHmac('sha512', config.binancePaySecret).update(payload).digest('hex').toUpperCase();
-      if (esperado !== assinatura) {
-        response.status(401).json({ error: 'Assinatura inválida.' });
-        return;
-      }
+    // Fechado por omissão: sem secret configurado, nada é aceite.
+    if (!config.binancePaySecret || !corpoBruto || !timestamp || !nonce || !assinatura) {
+      response.status(401).json({ error: 'Assinatura inválida.' });
+      return;
+    }
+    const payload = `${timestamp}\n${nonce}\n${corpoBruto}\n`;
+    const esperado = createHmac('sha512', config.binancePaySecret).update(payload).digest('hex').toUpperCase();
+    if (esperado !== assinatura) {
+      response.status(401).json({ error: 'Assinatura inválida.' });
+      return;
     }
 
     const data = request.body?.data ?? {};

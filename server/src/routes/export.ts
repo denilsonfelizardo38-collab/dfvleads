@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { supabaseAdmin } from '../services/supabaseAdmin.ts';
 import { HttpError, badRequest } from '../lib/http.ts';
+import { exportSchema, parseBody } from '../lib/validate.ts';
+import { debitarCreditos } from '../services/creditos.ts';
 import { CUSTO_EXPORT_CSV } from '../env.ts';
 import type { AuthedRequest } from '../types.ts';
 
@@ -18,11 +20,8 @@ exportRouter.post('/', async (request, response, next) => {
     const user = (request as AuthedRequest).user;
     if (!user) throw new HttpError(401, 'Não autenticado.');
 
-    const leadIds: unknown = request.body?.leadIds;
-    if (!Array.isArray(leadIds) || leadIds.length === 0) {
-      throw badRequest('Envie leadIds: string[] com os leads a exportar.');
-    }
-    const ids = leadIds.filter((id): id is string => typeof id === 'string').slice(0, 1000);
+    const { leadIds } = parseBody(exportSchema, request.body, 'Envie leadIds: string[] com os leads a exportar.');
+    const ids = leadIds.filter((id) => typeof id === 'string').slice(0, 1000);
     if (ids.length === 0) throw badRequest('Nenhum lead válido para exportar.');
 
     // ── Créditos: exportar CSV consome 3, independentemente do volume ──
@@ -50,12 +49,16 @@ exportRouter.post('/', async (request, response, next) => {
 
     if (error) throw new HttpError(500, 'Falha ao carregar leads para exportação.');
 
-    // Débito só depois de carregar os leads com sucesso.
-    const { error: debitoError } = await supabaseAdmin
-      .from('profiles')
-      .update({ credits: profile.credits - CUSTO_EXPORT_CSV, updated_at: new Date().toISOString() })
-      .eq('user_id', user.id);
-    if (debitoError) throw new HttpError(500, 'Falha ao debitar os créditos da exportação.');
+    // Débito ATÓMICO só depois de carregar os leads com sucesso.
+    const debito = await debitarCreditos(user.id, CUSTO_EXPORT_CSV);
+    if (!debito.ok) {
+      response.status(402).json({
+        error: `Exportar o CSV consome ${CUSTO_EXPORT_CSV} créditos e você tem ${debito.credits}. Faça upgrade para continuar.`,
+        needUpgrade: true,
+        credits: debito.credits,
+      });
+      return;
+    }
 
     const header = 'Nome;Telefone;Endereco;Website;Avaliacao;Reviews;Status';
     const statusLabel: Record<string, string> = {

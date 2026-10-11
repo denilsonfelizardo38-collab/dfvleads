@@ -11,6 +11,14 @@ interface Bucket {
 const buckets = new Map<string, Bucket>();
 const WINDOW_MS = 60 * 60 * 1000;
 
+// Faxina periódica: evita crescimento ilimitado do Map em produção.
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, bucket] of buckets) {
+    if (bucket.resetAt <= now) buckets.delete(key);
+  }
+}, 10 * 60 * 1000).unref?.();
+
 function currentBucket(userId: string): Bucket {
   const now = Date.now();
   const bucket = buckets.get(userId);

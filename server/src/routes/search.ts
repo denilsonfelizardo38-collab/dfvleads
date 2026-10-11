@@ -5,6 +5,8 @@ import { placesSearchText } from '../services/googlePlaces.ts';
 import { buscarLugaresOsm } from '../services/openStreetMap.ts';
 import { sondarLote } from '../services/siteProbe.ts';
 import { config, CUSTO_BUSCA, planoPelaChave } from '../env.ts';
+import { debitarCreditos } from '../services/creditos.ts';
+import { buscaSchema, nomeSchema, parseBody } from '../lib/validate.ts';
 import { telefoneCoerente, paisDaBusca } from '../services/telefoneValido.ts';
 import { HttpError, badRequest, cleanText } from '../lib/http.ts';
 import type { AuthedRequest, LeadDTO, PlaceCandidate } from '../types.ts';
@@ -53,12 +55,10 @@ searchRouter.post('/search', async (request, response, next) => {
     const user = (request as AuthedRequest).user;
     if (!user) throw new HttpError(401, 'Não autenticado.');
 
-    const niche = cleanText(request.body?.niche, 60);
-    const city = cleanText(request.body?.city, 60);
-    const radiusKm =
-      Number.isFinite(request.body?.radiusKm) && Number(request.body?.radiusKm) > 0
-        ? Math.min(500, Math.round(Number(request.body.radiusKm)))
-        : null;
+    const entrada = parseBody(buscaSchema, request.body, 'Dados da busca inválidos.');
+    const niche = cleanText(entrada.niche, 60);
+    const city = cleanText(entrada.city, 60);
+    const radiusKm = entrada.radiusKm == null ? null : Math.min(500, Math.round(entrada.radiusKm));
 
     if (niche.length < 2) throw badRequest('Informe um nicho (ex.: barbearia, dentista, pizzaria).');
     if (city.length < 2) throw badRequest('Informe uma cidade.');
@@ -196,14 +196,26 @@ searchRouter.post('/search', async (request, response, next) => {
     const { error: updateError } = await supabaseAdmin
       .from('profiles')
       .update({
-        credits: profile.credits - CUSTO_BUSCA,
         // A busca e os leads já foram inseridos acima, então os counts já os incluem.
         total_searches: await countUserSearches(user.id),
         total_leads: await countUserLeads(user.id),
         updated_at: new Date().toISOString(),
       })
       .eq('user_id', user.id);
-    if (updateError) throw new HttpError(500, 'Falha ao atualizar créditos.');
+    if (updateError) throw new HttpError(500, 'Falha ao atualizar contadores.');
+
+    // ── Débito ATÓMICO (fonte da verdade, no momento do débito) ───
+    // O saldo pode ter mudado durante a busca (longa); o RPC confere E
+    // debita numa só instrução — sem gasto duplo nem saldo negativo.
+    const debito = await debitarCreditos(user.id, CUSTO_BUSCA);
+    if (!debito.ok) {
+      response.status(402).json({
+        error: `Cada busca consome ${CUSTO_BUSCA} crédito e você tem ${debito.credits}. Faça upgrade para continuar.`,
+        needUpgrade: true,
+        credits: debito.credits,
+      });
+      return;
+    }
 
     response.json({
       search: {
@@ -215,7 +227,7 @@ searchRouter.post('/search', async (request, response, next) => {
         createdAt: searchRow.created_at,
       },
       creditsUsed: CUSTO_BUSCA,
-      creditsRemaining: profile.credits - CUSTO_BUSCA,
+      creditsRemaining: debito.credits,
       summary: {
         total: leads.length,
         newLeads,
@@ -240,7 +252,8 @@ searchRouter.patch('/me', async (request, response, next) => {
     const user = await getAuthUser(request);
     if (!user) throw new HttpError(401, 'Sessão inválida ou expirada.');
 
-    const nome = cleanText(request.body?.nome, 80);
+    const { nome: nomeBruto } = parseBody(nomeSchema, request.body, 'Nome inválido.');
+    const nome = cleanText(nomeBruto ?? '', 80);
     const { error } = await supabaseAdmin
       .from('profiles')
       .update({ full_name: nome || null, updated_at: new Date().toISOString() })

@@ -4,6 +4,7 @@ import JSZip from 'jszip';
 import { supabaseAdmin } from '../services/supabaseAdmin.ts';
 import { gerarLandingPageComAnalise, type DadosEmpresa } from '../services/siteGenerator.ts';
 import { HttpError } from '../lib/http.ts';
+import { consumirSiteQuota } from '../services/creditos.ts';
 import { config, planoPelaChave, TRIAL_SITES } from '../env.ts';
 import { carregarPerfil } from '../middleware/gate.ts';
 import type { AuthedRequest } from '../types.ts';
@@ -50,12 +51,17 @@ async function cobrarCotaSite(user_id: string): Promise<number> {
         : 'Você já usou o site grátis do trial. Assine um plano para criar mais sites.',
     );
   }
-  const { error } = await supabaseAdmin
-    .from('profiles')
-    .update({ sites_used: perfil.sites_used + 1, updated_at: new Date().toISOString() })
-    .eq('user_id', user_id);
-  if (error) throw new HttpError(500, 'Falha ao registrar o uso do site.');
-  return limite - (perfil.sites_used + 1);
+  // Consumo ATÓMICO da cota (uma só instrução: confere E incrementa).
+  const cota = await consumirSiteQuota(user_id, limite);
+  if (!cota.ok) {
+    throw new HttpError(
+      402,
+      planoPagoAtivo
+        ? `Cota do plano esgotada: ${limite} sites por período. Renove o plano para continuar.`
+        : 'Você já usou o site grátis do trial. Assine um plano para criar mais sites.',
+    );
+  }
+  return cota.restantes;
 }
 
 export const landingPagesRouter = Router();

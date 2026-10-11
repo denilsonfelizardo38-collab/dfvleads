@@ -36,6 +36,8 @@ export default function Footer() {
             <li><Link to="/login" className="transition hover:text-slate-300">Entrar</Link></li>
             <li><Link to="/registrar" className="transition hover:text-slate-300">Criar conta grátis</Link></li>
             <li><Link to="/recuperar" className="transition hover:text-slate-300">Recuperar senha</Link></li>
+            <li><Link to="/termos" className="transition hover:text-slate-300">Termos de Serviço</Link></li>
+            <li><Link to="/privacidade" className="transition hover:text-slate-300">Privacidade</Link></li>
           </ul>
         </div>
       </div>

@@ -32,6 +32,8 @@ export const config: Config = {
   paypalClientId: process.env.PAYPAL_CLIENT_ID ?? '',
   paypalSecret: process.env.PAYPAL_SECRET ?? '',
   paypalSandbox: (process.env.PAYPAL_SANDBOX ?? 'true') === 'true',
+  /** ID do webhook no dashboard PayPal — sem ele, o webhook NÃO ativa planos. */
+  paypalWebhookId: process.env.PAYPAL_WEBHOOK_ID ?? '',
   binancePayKey: process.env.BINANCE_PAY_KEY ?? '',
   binancePaySecret: process.env.BINANCE_PAY_SECRET ?? '',
   /** Prazo global das buscas OSM (ms). Vercel: 45000 (limite de 60 s/função). */

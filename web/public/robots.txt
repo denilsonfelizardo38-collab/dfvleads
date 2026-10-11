@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dfvleads.onrender.com/sitemap.xml
