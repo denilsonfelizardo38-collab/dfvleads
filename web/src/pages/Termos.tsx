@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Landing/Navbar.tsx';
 import Footer from '../components/Landing/Footer.tsx';
+import Icon from '../components/ui/Icon.tsx';
 
 export default function Termos() {
   return (
@@ -16,14 +17,14 @@ export default function Termos() {
           </h1>
           <p className="mt-3 text-sm leading-relaxed">
             Estes Termos regulam o uso do DFVLeads, um SaaS de prospeção que ajuda a encontrar
-            empresas sem website, contactá-las e gerar sites com inteligência artificial. Ao criar
+            empresas sem website, contactá-las e gerar sites profissionais. Ao criar
             uma conta, o utilizador aceita estes Termos.
           </p>
 
           <h2 className="mt-8 text-lg font-semibold text-slate-900">1. Serviço e conta</h2>
           <p className="mt-2 text-sm leading-relaxed">
-            O DFVLeads disponibiliza pesquisa de empresas, gestão de leads e geração de sites por
-            IA. A conta é pessoal e intransmissível. O utilizador é responsável por manter as suas
+            O DFVLeads disponibiliza pesquisa de empresas, gestão de leads e geração de sites
+            profissionais. A conta é pessoal e intransmissível. O utilizador é responsável por manter as suas
             credenciais em segurança e por toda a atividade realizada na sua conta.
           </p>
 
@@ -64,7 +65,7 @@ export default function Termos() {
 
           <h2 className="mt-8 text-lg font-semibold text-slate-900">7. Propriedade dos sites</h2>
           <p className="mt-2 text-sm leading-relaxed">
-            Os sites gerados por IA pertencem ao cliente após o pagamento do plano que lhes dá
+            Os sites gerados na sua conta pertencem ao cliente após o pagamento do plano que lhes dá
             origem. O DFVLeads mantém o direito de usar componentes genéricos e modelos internos,
             sem reproduzir conteúdos específicos de clientes.
           </p>
@@ -82,8 +83,9 @@ export default function Termos() {
           </p>
 
           <div className="mt-10 border-t border-slate-200 pt-6 text-sm">
-            <Link to="/" className="font-medium text-emerald-600 hover:text-emerald-700">
-              ← Voltar ao início
+            <Link to="/" className="inline-flex items-center gap-1.5 font-medium text-emerald-600 hover:text-emerald-700">
+              <Icon name="arrow-left" className="h-4 w-4" />
+              Voltar ao início
             </Link>
           </div>
         </div>

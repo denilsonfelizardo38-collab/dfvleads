@@ -222,7 +222,7 @@ export default function PlanosPage() {
                     </li>
                     <li className="flex items-center gap-2">
                       <Icon name="check" className="h-3.5 w-3.5 text-brand-500" />
-                      {plano.sites} sites gerados com IA
+                      {plano.sites} sites profissionais
                     </li>
                     <li className="flex items-center gap-2">
                       <Icon name="check" className="h-3.5 w-3.5 text-brand-500" />

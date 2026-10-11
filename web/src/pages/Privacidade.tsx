@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Landing/Navbar.tsx';
 import Footer from '../components/Landing/Footer.tsx';
+import Icon from '../components/ui/Icon.tsx';
 
 export default function Privacidade() {
   return (
@@ -66,8 +67,9 @@ export default function Privacidade() {
           </p>
 
           <div className="mt-10 border-t border-slate-200 pt-6 text-sm">
-            <Link to="/" className="font-medium text-emerald-600 hover:text-emerald-700">
-              ← Voltar ao início
+            <Link to="/" className="inline-flex items-center gap-1.5 font-medium text-emerald-600 hover:text-emerald-700">
+              <Icon name="arrow-left" className="h-4 w-4" />
+              Voltar ao início
             </Link>
           </div>
         </div>

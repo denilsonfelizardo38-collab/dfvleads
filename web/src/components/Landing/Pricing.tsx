@@ -23,7 +23,7 @@ const PLANS: Plan[] = [
     perks: [
       'Busca por nicho + cidade',
       'Só empresas sem site, com telefone real',
-      '4 sites gerados com IA',
+      '4 sites profissionais',
       'Publicação com link próprio',
     ],
   },
@@ -34,7 +34,7 @@ const PLANS: Plan[] = [
     credits: '200 pesquisas + 15 sites',
     perks: [
       'Tudo do Starter',
-      '15 sites gerados com IA',
+      '15 sites profissionais',
       'Exportação CSV completa',
       'Publicação com link próprio',
     ],
@@ -47,7 +47,7 @@ const PLANS: Plan[] = [
     credits: '600 pesquisas + 35 sites',
     perks: [
       'Tudo do Business',
-      '35 sites gerados com IA',
+      '35 sites profissionais',
       'Volume para equipes',
       'Suporte prioritário por WhatsApp',
     ],

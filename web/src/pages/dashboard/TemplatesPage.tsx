@@ -79,7 +79,7 @@ export default function TemplatesPage() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Templates</h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Estilos prontos por tipo de negócio — a IA adapta o template aos dados reais de cada lead.
+          Estilos prontos por tipo de negócio — cada template adapta-se aos dados reais de cada lead.
         </p>
       </div>
 
@@ -149,8 +149,8 @@ export default function TemplatesPage() {
         <p className="flex items-start gap-2">
           <Icon name="sparkles" className="mt-0.5 h-4 w-4 shrink-0 text-brand-700 dark:text-brand-400" />
           <span>
-            Não precisa escolher template manualmente: ao gerar o site de um lead, a IA analisa o
-            negócio e aplica automaticamente o layout mais indicado para o nicho.
+            Não precisa escolher template manualmente: ao gerar o site de um lead, o layout
+            mais indicado para o nicho é aplicado automaticamente.
           </span>
         </p>
       </div>

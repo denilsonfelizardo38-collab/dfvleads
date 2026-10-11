@@ -111,7 +111,7 @@ export default function SearchForm({
                 const grupo = GRUPOS_NICHOS.find((g) =>
                   g.nichos.some((n) => n.toLowerCase() === niche.trim().toLowerCase()),
                 );
-                return grupo ? `Categoria: ${grupo.categoria}` : 'Nicho livre — a IA analisa qualquer negócio';
+                return grupo ? `Categoria: ${grupo.categoria}` : 'Nicho livre — qualquer negócio funciona';
               })()}
             </p>
           )}

@@ -478,7 +478,7 @@ ${
 
 <footer>
   <b>${nome}</b> — ${esc(dados.endereco ?? dados.cidade)} · ${esc(horario)}<br>
-  © ${new Date().getFullYear()} ${nome}. Site criado com DFVCode.
+  © ${new Date().getFullYear()} ${nome}.
 </footer>
 
 <script type="application/ld+json">${JSON.stringify({

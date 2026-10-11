@@ -138,7 +138,7 @@ export default function LandingPageModal({ lead, onClose }: LandingPageModalProp
         {estado.fase === 'confirmar' && (
           <div className="space-y-4 p-5">
             <p className="text-sm text-slate-600 dark:text-slate-300">
-              A IA vai <strong className="text-slate-900 dark:text-white">analisar este negócio</strong> (tipo, clientes,
+              Vamos <strong className="text-slate-900 dark:text-white">analisar este negócio</strong> (tipo, clientes,
               o que eles precisam) e <strong className="text-slate-900 dark:text-white">decidir a solução digital</strong>:
               seções, funcionalidades, formulário e mensagem de WhatsApp contextuais — nada de
               template genérico.

@@ -882,7 +882,7 @@ ${secoesHtml.join('\n')}
       <p style="margin-top:.5rem;font-size:.85rem;line-height:1.9">${dados.telefone ? esc(dados.telefone) : 'Pelo WhatsApp'}<br>${temWhats ? 'WhatsApp disponível' : ''}</p>
     </div>
   </div>
-  <p style="max-width:66rem;margin:1.6rem auto 0;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.12);font-size:.78rem;opacity:.65;text-align:center">© ${new Date().getFullYear()} ${nomeSeguro}. Site criado com DFVCode.</p>
+  <p style="max-width:66rem;margin:1.6rem auto 0;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.12);font-size:.78rem;opacity:.65;text-align:center">© ${new Date().getFullYear()} ${nomeSeguro}.</p>
 </footer>
 <script>
 (function(){

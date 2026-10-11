@@ -85,7 +85,7 @@ export default function DashboardHome({ profile }: DashboardHomeProps) {
             <span className="bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent">
               {nome}
             </span>
-            ! 👋
+            !
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Aqui está um resumo da sua atividade.</p>
         </div>
