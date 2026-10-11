@@ -66,24 +66,24 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="animate-fade-up flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+        className="animate-fade-up flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-white/10 dark:bg-night-900"
         onClick={(evento) => evento.stopPropagation()}
       >
         {/* Cabeçalho com foto/nome/status */}
-        <div className="flex items-start justify-between gap-3 border-b border-slate-200 p-5">
+        <div className="flex items-start justify-between gap-3 border-b border-slate-200 p-5 dark:border-white/10">
           <div className="flex items-center gap-4">
             <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-lg font-extrabold text-white">
               {initials(lead.name)}
             </span>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-lg font-bold text-slate-900">{lead.name}</h2>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{lead.name}</h2>
                 <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium ${meta.chip}`}>
                   <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${meta.cor}`} />
                   {lead.status === 'NO_SITE' ? 'Sem website' : meta.label}
                 </span>
               </div>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                 {lead.address ?? 'Endereço não informado'}
               </p>
             </div>
@@ -91,7 +91,7 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
+            className="rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
             aria-label="Fechar"
           >
             <Icon name="x" className="h-4 w-4" />
@@ -99,7 +99,7 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
         </div>
 
         {/* Botões de contacto */}
-        <div className="flex flex-wrap gap-2 border-b border-slate-200 px-5 py-3">
+        <div className="flex flex-wrap gap-2 border-b border-slate-200 px-5 py-3 dark:border-white/10">
           {whatsappUrl && (
             <a
               href={whatsappUrl}
@@ -115,7 +115,7 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
             <>
               <a
                 href={`tel:${numero}`}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-200 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
               >
                 <Icon name="phone" className="h-4 w-4" />
                 Ligar
@@ -123,7 +123,7 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
               <button
                 type="button"
                 onClick={() => void copiarTelefone()}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-200 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
               >
                 <Icon name="note" className="h-4 w-4" />
                 Copiar número
@@ -133,7 +133,7 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
         </div>
 
         {/* Abas */}
-        <div className="flex gap-1 overflow-x-auto border-b border-slate-200 px-5">
+        <div className="flex gap-1 overflow-x-auto border-b border-slate-200 px-5 dark:border-white/10">
           {abas.map((item) => (
             <button
               key={item.id}
@@ -141,8 +141,8 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
               onClick={() => setAba(item.id)}
               className={`shrink-0 border-b-2 px-3 py-2.5 text-sm font-medium transition ${
                 aba === item.id
-                  ? 'border-brand-500 text-brand-700'
-                  : 'border-transparent text-slate-500 hover:text-slate-900'
+                  ? 'border-brand-500 text-brand-700 dark:text-brand-400'
+                  : 'border-transparent text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
               }`}
             >
               {item.label}
@@ -173,28 +173,28 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
                   )
                 }
               />
-              <Row label="Website" value={lead.website ?? <span className="text-red-600">Não possui</span>} />
+              <Row label="Website" value={lead.website ?? <span className="text-red-600 dark:text-red-300">Não possui</span>} />
               <Row label="Avaliação" value={formatRating(lead.rating, lead.reviews) || '—'} />
             </dl>
           )}
 
           {aba === 'negocio' && (
-            <div className="space-y-3 text-sm text-slate-600">
+            <div className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
               <p>
                 Este negócio foi identificado pelo DFVLeads como{' '}
-                <b className="text-slate-900">{lead.status === 'NO_SITE' ? 'sem presença online' : meta.label.toLowerCase()}</b>.
+                <b className="text-slate-900 dark:text-white">{lead.status === 'NO_SITE' ? 'sem presença online' : meta.label.toLowerCase()}</b>.
                 {lead.status === 'NO_SITE' &&
                   ' Uma landing page profissional com os dados reais (telefone, endereço, avaliações) pode ser gerada com um clique — pronta para entregar.'}
               </p>
               {lead.rating != null && (
                 <p>
-                  Avaliação média de <b className="text-slate-900">{lead.rating.toFixed(1)}</b> com{' '}
-                  <b className="text-slate-900">{lead.reviews ?? 0}</b> avaliações — reputação boa para abordar com confiança.
+                  Avaliação média de <b className="text-slate-900 dark:text-white">{lead.rating.toFixed(1)}</b> com{' '}
+                  <b className="text-slate-900 dark:text-white">{lead.reviews ?? 0}</b> avaliações — reputação boa para abordar com confiança.
                 </p>
               )}
               <div className="rounded-xl border border-brand-500/30 bg-brand-500/5 p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-brand-700">Sugestão de abordagem</p>
-                <p className="mt-1.5 text-sm text-slate-600">
+                <p className="text-xs font-bold uppercase tracking-wide text-brand-700 dark:text-brand-400">Sugestão de abordagem</p>
+                <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-300">
                   Apresente a prévia do site já pronta no WhatsApp — donos de negócio respondem melhor a algo concreto do que a uma proposta genérica.
                 </p>
               </div>
@@ -211,17 +211,17 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
                   loading="lazy"
                 />
               ) : (
-                <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-500">
+                <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-500 dark:border-white/10 dark:bg-night-900 dark:text-slate-400">
                   Coordenadas não disponíveis para este lead.
                 </p>
               )}
-              <p className="text-sm text-slate-500">{lead.address ?? 'Endereço não informado'}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{lead.address ?? 'Endereço não informado'}</p>
             </div>
           )}
 
           {aba === 'anotacoes' && (
             <div className="space-y-2">
-              <label htmlFor="anotacao" className="text-sm font-medium text-slate-600">
+              <label htmlFor="anotacao" className="text-sm font-medium text-slate-600 dark:text-slate-300">
                 As suas notas sobre este lead
               </label>
               <textarea
@@ -232,7 +232,7 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
                 placeholder="Ex.: ligar às terças de manhã, falar com o dono (senhor Carlos)…"
                 className="input resize-y"
               />
-              <p className="text-xs text-slate-500">As notas ficam guardadas neste dispositivo.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">As notas ficam guardadas neste dispositivo.</p>
             </div>
           )}
         </div>
@@ -243,9 +243,9 @@ export default function LeadDetailModal({ lead, onClose }: LeadDetailModalProps)
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-3 last:border-0 last:pb-0">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="text-right font-medium text-slate-900">{value}</dd>
+    <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-3 last:border-0 last:pb-0 dark:border-white/5">
+      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
+      <dd className="text-right font-medium text-slate-900 dark:text-white">{value}</dd>
     </div>
   );
 }

@@ -78,12 +78,12 @@ export default function PerfilPage({ profile, onSaved }: PerfilPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Perfil</h1>
-        <p className="mt-1 text-sm text-slate-500">Os seus dados pessoais e conta.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Perfil</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Os seus dados pessoais e conta.</p>
       </div>
 
       <form onSubmit={(evento) => void handleSubmit(evento)} className="card space-y-5">
-        <h2 className="font-bold text-slate-900">Dados pessoais</h2>
+        <h2 className="font-bold text-slate-900 dark:text-white">Dados pessoais</h2>
 
         <div className="flex flex-wrap items-center gap-4">
           {avatar ? (
@@ -101,7 +101,7 @@ export default function PerfilPage({ profile, onSaved }: PerfilPageProps) {
               <button
                 type="button"
                 onClick={removerFoto}
-                className="rounded-xl border border-slate-300 bg-slate-100 px-3.5 py-2 text-xs font-semibold text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
+                className="rounded-xl border border-slate-300 dark:border-white/15 bg-slate-100 dark:bg-white/5 px-3.5 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 transition hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white"
               >
                 Remover
               </button>
@@ -118,7 +118,7 @@ export default function PerfilPage({ profile, onSaved }: PerfilPageProps) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="nome" className="mb-1.5 block text-sm font-medium text-slate-600">
+            <label htmlFor="nome" className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">
               Nome
             </label>
             <input
@@ -131,7 +131,7 @@ export default function PerfilPage({ profile, onSaved }: PerfilPageProps) {
             />
           </div>
           <div>
-            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-600">
+            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">
               Email
             </label>
             <input
@@ -158,7 +158,7 @@ export default function PerfilPage({ profile, onSaved }: PerfilPageProps) {
       </form>
 
       <div className="card space-y-3">
-        <h2 className="font-bold text-slate-900">Conta</h2>
+        <h2 className="font-bold text-slate-900 dark:text-white">Conta</h2>
         <dl className="space-y-2.5 text-sm">
           <Linha label="Plano atual" value={profile?.planoInfo?.nome ?? 'Gratuito (trial)'} />
           <Linha label="Créditos de busca" value={String(profile?.credits ?? '—')} />
@@ -166,7 +166,7 @@ export default function PerfilPage({ profile, onSaved }: PerfilPageProps) {
           <Linha label="Leads coletados" value={String(profile?.totalLeads ?? 0)} />
           <Linha label="Sites gerados" value={String(profile?.sitesUsed ?? 0)} />
         </dl>
-        <div className="flex gap-2 border-t border-slate-200 pt-3">
+        <div className="flex gap-2 border-t border-slate-200 dark:border-white/10 pt-3">
           <Link to="/dashboard/planos" className="btn-primary flex-1 py-2! text-xs">
             Fazer Upgrade
           </Link>
@@ -181,9 +181,9 @@ export default function PerfilPage({ profile, onSaved }: PerfilPageProps) {
 
 function Linha({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 last:border-0 last:pb-0">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="font-semibold text-slate-900">{value}</dd>
+    <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-2.5 last:border-0 last:pb-0">
+      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
+      <dd className="font-semibold text-slate-900 dark:text-white">{value}</dd>
     </div>
   );
 }

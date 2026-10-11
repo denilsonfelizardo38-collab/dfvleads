@@ -36,19 +36,19 @@ export default function HistoryPage({ onOpen }: HistoryPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Histórico de buscas</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Histórico de buscas</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Reabra qualquer resultado anterior — reabrir é sempre grátis.
         </p>
       </div>
 
       {searches === null ? (
-        <div className="card flex items-center gap-3 text-sm text-slate-500">
+        <div className="card flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
           <Spinner /> Carregando…
         </div>
       ) : searches.length === 0 ? (
         <div className="card text-center">
-          <p className="text-slate-500">Você ainda não fez buscas.</p>
+          <p className="text-slate-500 dark:text-slate-400">Você ainda não fez buscas.</p>
           <Link to="/dashboard/pesquisar" className="btn-primary mt-4">
             Fazer primeira busca
           </Link>
@@ -60,19 +60,19 @@ export default function HistoryPage({ onOpen }: HistoryPageProps) {
               <button
                 type="button"
                 onClick={() => onOpen(search)}
-                className="card flex w-full items-center justify-between gap-4 text-left transition hover:border-brand-500/30 hover:bg-slate-50"
+                className="card flex w-full items-center justify-between gap-4 text-left transition hover:border-brand-500/30 hover:bg-slate-50 dark:hover:bg-white/[0.04]"
               >
                 <div>
-                  <p className="font-medium text-slate-900">
-                    {search.niche} <span className="text-slate-500">em</span> {search.city}
+                  <p className="font-medium text-slate-900 dark:text-white">
+                    {search.niche} <span className="text-slate-500 dark:text-slate-400">em</span> {search.city}
                   </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                     {formatDate(search.createdAt)}
                     {search.radiusKm ? ` · raio ${search.radiusKm} km` : ''}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                  <span className="rounded-full bg-slate-100 dark:bg-white/5 px-3 py-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
                     {search.leadCount} leads
                   </span>
                   <Icon name="arrow-right" className="h-4 w-4 text-brand-500" />

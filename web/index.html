@@ -9,6 +9,13 @@
       content="Descubra empresas sem website na sua cidade, contacte-as por WhatsApp e gere o site delas com IA: nome, telefone, endereço e avaliações do Google Maps."
     />
     <meta name="theme-color" content="#0a0a0c" />
+    <script>
+      try {
+        if (window.localStorage.getItem('dfvleads-theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

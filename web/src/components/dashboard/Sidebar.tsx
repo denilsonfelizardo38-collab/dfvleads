@@ -50,7 +50,7 @@ export default function Sidebar({ isAdmin = false, profile = null }: SidebarProp
     }
     return `flex shrink-0 items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
       claro
-        ? 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+        ? 'text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white'
         : 'text-slate-400 hover:bg-white/5 hover:text-white'
     }`;
   }
@@ -112,7 +112,7 @@ export default function Sidebar({ isAdmin = false, profile = null }: SidebarProp
       </nav>
 
       {/* ── Mobile: barra horizontal rolável no topo ────────────────── */}
-      <nav className="flex gap-1 overflow-x-auto border-b border-slate-200 bg-white p-2 md:hidden">
+      <nav className="flex gap-1 overflow-x-auto border-b border-slate-200 bg-white p-2 md:hidden dark:border-white/10 dark:bg-night-900/80">
         {LINKS.map((link) => (
           <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => itemClass(isActive, true)}>
             <Icon name={link.icon} className="h-4 w-4 shrink-0" />

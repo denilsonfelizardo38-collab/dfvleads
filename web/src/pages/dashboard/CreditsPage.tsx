@@ -14,8 +14,8 @@ export default function CreditsPage({ profile }: CreditsPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Créditos</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Créditos</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Cada busca consome 1 crédito — não importa quantos leads encontre. Cada site gerado (ou
           regenerado) consome 1 site da cota do plano.
         </p>
@@ -23,15 +23,15 @@ export default function CreditsPage({ profile }: CreditsPageProps) {
 
       <div className="card flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-slate-500">Saldo de buscas</p>
-          <p className="text-4xl font-extrabold text-slate-900">
-            {profile?.credits ?? '—'} <span className="text-base font-medium text-slate-500">créditos</span>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Saldo de buscas</p>
+          <p className="text-4xl font-extrabold text-slate-900 dark:text-white">
+            {profile?.credits ?? '—'} <span className="text-base font-medium text-slate-500 dark:text-slate-400">créditos</span>
           </p>
         </div>
-        <div className="text-right text-sm text-slate-500">
+        <div className="text-right text-sm text-slate-500 dark:text-slate-400">
           <p>
             Plano:{' '}
-            <span className="font-semibold uppercase text-brand-700">
+            <span className="font-semibold uppercase text-brand-700 dark:text-brand-400">
               {plano ? plano.nome : 'Trial (sem plano pago)'}
             </span>
           </p>
@@ -41,21 +41,21 @@ export default function CreditsPage({ profile }: CreditsPageProps) {
           </p>
           {profile?.planExpires && plano && (
             <p className="mt-1">
-              Válido até <b className="text-slate-900">{new Date(profile.planExpires).toLocaleDateString('pt-BR')}</b>
+              Válido até <b className="text-slate-900 dark:text-white">{new Date(profile.planExpires).toLocaleDateString('pt-BR')}</b>
             </p>
           )}
         </div>
       </div>
 
       {!plano && (
-        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-800">
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-800 dark:text-amber-200">
           Você está no trial: 1 busca + 1 site grátis. Assine um plano para continuar gerando sites.
         </div>
       )}
 
       <div className="card">
-        <h2 className="text-lg font-semibold text-slate-900">Planos disponíveis</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Planos disponíveis</h2>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Starter 10$ (100 pesquisas + 4 sites) · Business 30$ (200 + 15) · Agência 75$ (600 + 35).
           Pagamento por Binance (USDT) ou PayPal, com ativação automática.
         </p>

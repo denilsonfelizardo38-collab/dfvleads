@@ -39,12 +39,12 @@ export default function SettingsPage({ profile }: SettingsPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Configurações</h1>
-        <p className="mt-1 text-sm text-slate-500">Sua conta e preferências.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Configurações</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Sua conta e preferências.</p>
       </div>
 
       <div className="card space-y-4">
-        <h2 className="font-semibold text-slate-900">Conta</h2>
+        <h2 className="font-semibold text-slate-900 dark:text-white">Conta</h2>
         <Row label="Email" value={profile?.email ?? '—'} />
         <Row label="Plano" value={(profile?.planoInfo?.nome ?? profile?.plan ?? '—').toString()} />
         <Row label="Créditos restantes" value={String(profile?.credits ?? '—')} />
@@ -53,7 +53,7 @@ export default function SettingsPage({ profile }: SettingsPageProps) {
       </div>
 
       <div className="card space-y-4">
-        <h2 className="font-semibold text-slate-900">Preferências</h2>
+        <h2 className="font-semibold text-slate-900 dark:text-white">Preferências</h2>
         <Toggle
           label="Receber notificações por email"
           checked={prefs.notificarEmail}
@@ -64,7 +64,7 @@ export default function SettingsPage({ profile }: SettingsPageProps) {
           checked={prefs.notificarWhatsapp}
           onChange={() => alternar('notificarWhatsapp')}
         />
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           As preferências ficam guardadas neste dispositivo.
         </p>
       </div>
@@ -74,9 +74,9 @@ export default function SettingsPage({ profile }: SettingsPageProps) {
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-slate-100 pb-3 last:border-0 last:pb-0">
-      <span className="text-sm text-slate-500">{label}</span>
-      <span className="text-sm font-semibold text-slate-900">{value}</span>
+    <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-3 last:border-0 last:pb-0">
+      <span className="text-sm text-slate-500 dark:text-slate-400">{label}</span>
+      <span className="text-sm font-semibold text-slate-900 dark:text-white">{value}</span>
     </div>
   );
 }
@@ -91,8 +91,8 @@ function Toggle({
   onChange: () => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-3 border-b border-slate-100 pb-3 last:border-0 last:pb-0 select-none">
-      <span className="text-sm text-slate-600">{label}</span>
+    <label className="flex cursor-pointer items-center justify-between gap-3 border-b border-slate-100 dark:border-white/5 pb-3 last:border-0 last:pb-0 select-none">
+      <span className="text-sm text-slate-600 dark:text-slate-300">{label}</span>
       <button
         type="button"
         role="switch"
@@ -100,7 +100,7 @@ function Toggle({
         aria-label={label}
         onClick={onChange}
         className={`relative h-5 w-9 shrink-0 rounded-full transition ${
-          checked ? 'bg-brand-500' : 'bg-slate-300'
+          checked ? 'bg-brand-500' : 'bg-slate-300 dark:bg-white/15'
         }`}
       >
         <span

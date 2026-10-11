@@ -141,8 +141,8 @@ export default function AdminPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Administração</h1>
-        <p className="mt-1 text-sm text-slate-500">Pagamentos, usuários e avisos da plataforma.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Administração</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Pagamentos, usuários e avisos da plataforma.</p>
       </div>
 
       {stats && (
@@ -155,15 +155,15 @@ export default function AdminPage() {
             { label: 'Sites gerados', valor: stats.sitesGerados },
             { label: 'Buscas', valor: stats.buscasTotais },
           ].map((item) => (
-            <div key={item.label} className={`rounded-2xl border p-4 ${item.destaque && item.valor > 0 ? 'border-amber-500/40 bg-amber-500/5' : 'border-slate-200 bg-white'}`}>
-              <p className="text-2xl font-extrabold text-slate-900">{item.valor}</p>
-              <p className="text-xs text-slate-500">{item.label}</p>
+            <div key={item.label} className={`rounded-2xl border p-4 ${item.destaque && item.valor > 0 ? 'border-amber-500/40 bg-amber-500/5' : 'border-slate-200 dark:border-white/10 bg-white dark:bg-night-900'}`}>
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">{item.valor}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{item.label}</p>
             </div>
           ))}
         </div>
       )}
 
-      <div className="flex gap-1 rounded-xl border border-slate-200 bg-white p-1">
+      <div className="flex gap-1 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 p-1">
         {(
           [
             ['pagamentos', `Pagamentos${stats?.pagamentosPendentes ? ` (${stats.pagamentosPendentes})` : ''}`],
@@ -176,7 +176,7 @@ export default function AdminPage() {
             type="button"
             onClick={() => setAba(chave)}
             className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${
-              aba === chave ? 'bg-brand-500/15 text-brand-700' : 'text-slate-500 hover:text-slate-900'
+              aba === chave ? 'bg-brand-500/15 text-brand-700 dark:text-brand-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             {rotulo}
@@ -185,9 +185,9 @@ export default function AdminPage() {
       </div>
 
       {erro && !carregando && (
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-200">
           <b>Não foi possível carregar o painel:</b> {erro}
-          <p className="mt-1 text-xs text-red-600">
+          <p className="mt-1 text-xs text-red-600 dark:text-red-300">
             Se diz "Acesso restrito", sua conta não é admin — rode no Supabase o SQL que marca
             dfvcode@mail.com como is_admin. Se cita coluna/tabela inexistente, rode as migrações
             supabase/migration_admin_billing.sql e supabase/migration_pagamentos_auto.sql.
@@ -196,9 +196,9 @@ export default function AdminPage() {
       )}
 
       {erro && !carregando && (
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-200">
           <b>Não foi possível carregar o painel:</b> {erro}
-          <p className="mt-1 text-xs text-red-600">
+          <p className="mt-1 text-xs text-red-600 dark:text-red-300">
             Se diz "Acesso restrito", sua conta não está marcada como admin — rode no Supabase o
             SQL que marca dfvcode@mail.com com is_admin = true. Se cita coluna ou tabela
             inexistente, rode as migrações supabase/migration_admin_billing.sql e
@@ -216,22 +216,22 @@ export default function AdminPage() {
       {!carregando && aba === 'pagamentos' && (
         <div className="space-y-3">
           {pedidos.length === 0 && (
-            <p className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500">
+            <p className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 p-6 text-center text-sm text-slate-500 dark:text-slate-400">
               Nenhum pagamento aguardando confirmação. Assim que um usuário enviar o comprovante pelo
               WhatsApp, ele aparece aqui.
             </p>
           )}
           {pedidos.map((pedido) => (
-            <div key={pedido.id} className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div key={pedido.id} className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-bold text-slate-900">
+                  <p className="font-bold text-slate-900 dark:text-white">
                     {pedido.email} — {pedido.amount_usd} USD
-                    <span className="ml-2 rounded-full bg-brand-500/15 px-2 py-0.5 text-xs font-bold text-brand-700">
+                    <span className="ml-2 rounded-full bg-brand-500/15 px-2 py-0.5 text-xs font-bold text-brand-700 dark:text-brand-400">
                       {pedido.plan_key}
                     </span>
                   </p>
-                  <p className="mt-0.5 break-all text-xs text-slate-500">
+                  <p className="mt-0.5 break-all text-xs text-slate-500 dark:text-slate-400">
                     {pedido.metodo} · ID: {pedido.referencia} · {new Date(pedido.created_at).toLocaleString('pt-BR')}
                   </p>
                 </div>
@@ -267,11 +267,11 @@ export default function AdminPage() {
             value={busca}
             onChange={(evento) => setBusca(evento.target.value)}
             placeholder="Buscar por e-mail…"
-            className="w-full max-w-sm rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500"
+            className="w-full max-w-sm rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 px-3 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:border-brand-500"
           />
-          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+              <thead className="bg-slate-50 dark:bg-white/[0.03] text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 <tr>
                   <th className="px-4 py-2.5">Usuário</th>
                   <th className="px-4 py-2.5">Plano</th>
@@ -281,13 +281,13 @@ export default function AdminPage() {
                   <th className="px-4 py-2.5">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {usuarios.map((usuario) => (
-                  <tr key={usuario.user_id} className={usuario.blocked ? 'text-slate-400' : 'text-slate-600'}>
+                  <tr key={usuario.user_id} className={usuario.blocked ? 'text-slate-400 dark:text-slate-500' : 'text-slate-600 dark:text-slate-300'}>
                     <td className="px-4 py-2.5">
                       <span className={usuario.blocked ? 'line-through' : ''}>{usuario.email}</span>
                       {usuario.is_admin && (
-                        <span className="ml-2 rounded-full bg-brand-500/15 px-2 py-0.5 text-[10px] font-bold text-brand-700">admin</span>
+                        <span className="ml-2 rounded-full bg-brand-500/15 px-2 py-0.5 text-[10px] font-bold text-brand-700 dark:text-brand-400">admin</span>
                       )}
                     </td>
                     <td className="px-4 py-2.5">{usuario.plan}</td>
@@ -302,7 +302,7 @@ export default function AdminPage() {
                           type="button"
                           onClick={() => void creditar(usuario)}
                           disabled={acao === usuario.user_id}
-                          className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-bold text-slate-900 transition hover:border-brand-500 hover:text-brand-500"
+                          className="rounded-lg border border-slate-200 dark:border-white/10 px-2.5 py-1.5 text-xs font-bold text-slate-900 dark:text-white transition hover:border-brand-500 hover:text-brand-500"
                         >
                           Creditar
                         </button>
@@ -312,8 +312,8 @@ export default function AdminPage() {
                           disabled={acao === usuario.user_id}
                           className={`rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${
                             usuario.blocked
-                              ? 'border-emerald-500/40 text-emerald-600 hover:bg-emerald-500/10'
-                              : 'border-red-500/40 text-red-600 hover:bg-red-500/10'
+                              ? 'border-emerald-500/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10'
+                              : 'border-red-500/40 text-red-600 dark:text-red-300 hover:bg-red-500/10'
                           }`}
                         >
                           {usuario.blocked ? 'Desbloquear' : 'Bloquear'}
@@ -329,13 +329,13 @@ export default function AdminPage() {
       )}
 
       {!carregando && aba === 'avisos' && (
-        <div className="max-w-xl space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
+        <div className="max-w-xl space-y-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 p-5">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">Destinatário</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Destinatário</label>
             <select
               value={alvo}
               onChange={(evento) => setAlvo(evento.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500"
+              className="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 px-3 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:border-brand-500"
             >
               <option value="todos">Todos os usuários</option>
               {usuarios.map((usuario) => (
@@ -346,22 +346,22 @@ export default function AdminPage() {
             </select>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">Título</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Título</label>
             <input
               value={titulo}
               onChange={(evento) => setTitulo(evento.target.value)}
               placeholder="Ex.: Manutenção programada"
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500"
+              className="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 px-3 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:border-brand-500"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">Mensagem</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Mensagem</label>
             <textarea
               value={corpo}
               onChange={(evento) => setCorpo(evento.target.value)}
               rows={4}
               placeholder="Escreva o aviso que aparece no sininho do painel do usuário."
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500"
+              className="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 px-3 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:border-brand-500"
             />
           </div>
           <button type="button" onClick={() => void enviarAviso()} disabled={enviandoAviso} className="btn-primary w-full">

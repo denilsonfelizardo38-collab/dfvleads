@@ -70,14 +70,14 @@ export default function MeusLeadsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Meus Leads</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Meus Leads</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Todos os leads encontrados nas suas buscas, num só lugar.
         </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex rounded-xl border border-slate-200 bg-white p-1">
+        <div className="flex rounded-xl border border-slate-200 bg-white p-1 dark:border-white/10 dark:bg-night-900">
           {FILTROS.map((item) => (
             <button
               key={item.id}
@@ -85,7 +85,7 @@ export default function MeusLeadsPage() {
               onClick={() => setFiltro(item.id)}
               aria-pressed={filtro === item.id}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                filtro === item.id ? 'bg-brand-500/20 text-brand-700' : 'text-slate-500 hover:text-slate-900'
+                filtro === item.id ? 'bg-brand-500/20 text-brand-700 dark:text-brand-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               {item.label}
@@ -93,7 +93,7 @@ export default function MeusLeadsPage() {
           ))}
         </div>
         <div className="relative min-w-0 flex-1 sm:max-w-xs">
-          <Icon name="search" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Icon name="search" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
           <input
             type="search"
             value={busca}
@@ -105,28 +105,28 @@ export default function MeusLeadsPage() {
       </div>
 
       {!leads && (
-        <div className="card flex items-center gap-3 text-sm text-slate-500">
+        <div className="card flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
           <Spinner /> Carregando leads…
         </div>
       )}
 
       {leads && leads.length === 0 && (
         <div className="card text-center">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Você ainda não tem leads — faça sua primeira busca para começar.
           </p>
         </div>
       )}
 
       {leads && leads.length > 0 && filtrados.length === 0 && (
-        <div className="card text-center text-sm text-slate-500">
+        <div className="card text-center text-sm text-slate-500 dark:text-slate-400">
           Nenhum lead corresponde a este filtro.
         </div>
       )}
 
       {filtrados.length > 0 && (
         <>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             {filtrados.length} lead(s) · {selected.size} selecionado(s)
           </p>
           <LeadCards

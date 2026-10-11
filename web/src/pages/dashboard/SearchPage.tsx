@@ -166,8 +166,8 @@ export default function SearchPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Pesquisar Leads</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Pesquisar Leads</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Encontre empresas que não têm website.
         </p>
       </div>
@@ -181,17 +181,17 @@ export default function SearchPage({
       />
 
       {state.phase === 'loading' && (
-        <div className="card flex items-center gap-3 text-sm text-slate-500">
+        <div className="card flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
           <Spinner /> Varrendo o Google Maps por empresas sem site…
         </div>
       )}
 
       {state.phase === 'blocked' && (
         <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-6">
-          <h2 className="flex items-center gap-2 text-lg font-bold text-amber-700">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-amber-700 dark:text-amber-300">
             <Icon name="alert" className="h-5 w-5" /> Saldo insuficiente
           </h2>
-          <p className="mt-2 text-sm text-amber-700/80">{state.message}</p>
+          <p className="mt-2 text-sm text-amber-700/80 dark:text-amber-300/80">{state.message}</p>
           <Link to="/dashboard/planos" className="btn-primary mt-4">
             Ver planos
           </Link>
@@ -199,7 +199,7 @@ export default function SearchPage({
       )}
 
       {state.phase === 'error' && (
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-sm text-red-600">
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-sm text-red-600 dark:text-red-300">
           {state.message}
         </div>
       )}
@@ -208,14 +208,14 @@ export default function SearchPage({
         <div className="animate-fade-up space-y-4">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             <Stat label="Total" value={state.summary.total} />
-            <Stat label="Sem site" value={state.summary.noSite} tone="text-red-600" />
-            <Stat label="Só redes" value={state.summary.socialOnly} tone="text-amber-700" />
-            <Stat label="Tem site" value={state.summary.hasSite} tone="text-slate-500" />
+            <Stat label="Sem site" value={state.summary.noSite} tone="text-red-600 dark:text-red-300" />
+            <Stat label="Só redes" value={state.summary.socialOnly} tone="text-amber-700 dark:text-amber-300" />
+            <Stat label="Tem site" value={state.summary.hasSite} tone="text-slate-500 dark:text-slate-400" />
           </div>
 
           {state.summary.aviso && (
-            <div className="flex items-start gap-2.5 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700/90">
-              <Icon name="alert" className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-700" />
+            <div className="flex items-start gap-2.5 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700/90 dark:text-amber-300/90">
+              <Icon name="alert" className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-700 dark:text-amber-300" />
               <p>{state.summary.aviso}</p>
             </div>
           )}
@@ -223,13 +223,13 @@ export default function SearchPage({
           {/* Cabeçalho dos resultados: contagem + ordenação + vista + export */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <h2 className="font-bold text-slate-900">Resultados ({leadsVisiveis.length})</h2>
-              <label className="flex items-center gap-1.5 text-xs text-slate-500">
+              <h2 className="font-bold text-slate-900 dark:text-white">Resultados ({leadsVisiveis.length})</h2>
+              <label className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                 Ordenar:
                 <select
                   value={ordenacao}
                   onChange={(evento) => setOrdenacao(evento.target.value as Ordenacao)}
-                  className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-600 shadow-sm focus:border-brand-500 focus:outline-none"
+                  className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-600 shadow-sm focus:border-brand-500 focus:outline-none dark:border-white/10 dark:bg-night-900 dark:text-slate-300"
                 >
                   <option value="recentes">Mais recentes</option>
                   <option value="nome">Nome (A–Z)</option>
@@ -239,15 +239,15 @@ export default function SearchPage({
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="hidden text-xs text-slate-500 sm:inline">
+              <span className="hidden text-xs text-slate-500 dark:text-slate-400 sm:inline">
                 −{state.creditsUsed} crédito · {profile?.credits ?? '?'} restante(s)
               </span>
-              <div className="flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-sm">
+              <div className="flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-sm dark:border-white/10 dark:bg-night-900">
                 <button
                   type="button"
                   onClick={() => setVista('cartoes')}
                   aria-pressed={vista === 'cartoes'}
-                  className={`rounded-md p-1.5 transition ${vista === 'cartoes' ? 'bg-brand-500/20 text-brand-700' : 'text-slate-500 hover:text-slate-900'}`}
+                  className={`rounded-md p-1.5 transition ${vista === 'cartoes' ? 'bg-brand-500/20 text-brand-700 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}
                   aria-label="Vista em cartões"
                 >
                   <Icon name="template" className="h-4 w-4" />
@@ -256,7 +256,7 @@ export default function SearchPage({
                   type="button"
                   onClick={() => setVista('tabela')}
                   aria-pressed={vista === 'tabela'}
-                  className={`rounded-md p-1.5 transition ${vista === 'tabela' ? 'bg-brand-500/20 text-brand-700' : 'text-slate-500 hover:text-slate-900'}`}
+                  className={`rounded-md p-1.5 transition ${vista === 'tabela' ? 'bg-brand-500/20 text-brand-700 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}
                   aria-label="Vista em tabela"
                 >
                   <Icon name="layout" className="h-4 w-4" />
@@ -274,7 +274,7 @@ export default function SearchPage({
             </div>
           </div>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Busca “{state.search.niche}” em “{state.search.city}”
             {state.search.radiusKm ? ` · raio ${state.search.radiusKm} km` : ''} ·{' '}
             {state.summary.alreadySeen > 0
@@ -289,13 +289,13 @@ export default function SearchPage({
           </p>
 
           {leadsVisiveis.length === 0 ? (
-            <div className="card text-center text-sm text-slate-500">
+            <div className="card text-center text-sm text-slate-500 dark:text-slate-400">
               Nenhum lead corresponde ao filtro atual.
               {apenasSemSite && state.summary.hasSite > 0 && (
                 <button
                   type="button"
                   onClick={() => setApenasSemSite(false)}
-                  className="ml-1 font-semibold text-brand-700 hover:text-brand-500"
+                  className="ml-1 font-semibold text-brand-700 hover:text-brand-500 dark:text-brand-400"
                 >
                   Mostrar os {state.summary.hasSite} com site
                 </button>
@@ -335,11 +335,11 @@ export default function SearchPage({
   );
 }
 
-function Stat({ label, value, tone = 'text-slate-900' }: { label: string; value: number; tone?: string }) {
+function Stat({ label, value, tone = 'text-slate-900 dark:text-white' }: { label: string; value: number; tone?: string }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm">
+    <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm dark:border-white/10 dark:bg-night-900">
       <p className={`text-xl font-bold ${tone}`}>{value}</p>
-      <p className="text-xs text-slate-500">{label}</p>
+      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
     </div>
   );
 }

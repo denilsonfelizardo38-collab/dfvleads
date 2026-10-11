@@ -49,7 +49,7 @@ export default function LeadCards({
           <div
             key={lead.id}
             className={`card flex flex-col gap-3 transition ${
-              marcado ? 'border-brand-500/50 bg-brand-500/5' : 'hover:border-slate-300'
+              marcado ? 'border-brand-500/50 bg-brand-500/5' : 'hover:border-slate-300 dark:hover:border-white/15'
             }`}
           >
             <div className="flex items-start gap-3">
@@ -66,7 +66,7 @@ export default function LeadCards({
                 {initials(lead.name)}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-slate-900">{lead.name}</p>
+                <p className="truncate font-semibold text-slate-900 dark:text-white">{lead.name}</p>
                 <span
                   className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold ${meta.chip}`}
                 >
@@ -76,7 +76,7 @@ export default function LeadCards({
               </div>
             </div>
 
-            <div className="space-y-1 text-xs text-slate-500">
+            <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
               <p className="flex items-center gap-1.5 truncate">
                 <Icon name="pin" className="h-3.5 w-3.5 shrink-0" />
                 {lead.address ?? 'Endereço não informado'}
@@ -96,7 +96,7 @@ export default function LeadCards({
               </p>
             </div>
 
-            <div className="mt-auto flex items-center gap-2 border-t border-slate-200 pt-3">
+            <div className="mt-auto flex items-center gap-2 border-t border-slate-200 pt-3 dark:border-white/10">
               <button
                 type="button"
                 onClick={() => onOpenDetail(lead)}
@@ -108,7 +108,7 @@ export default function LeadCards({
                 <button
                   type="button"
                   onClick={(evento) => void copyPhone(evento, lead.phone)}
-                  className="rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
+                  className="rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Copiar telefone"
                 >
                   <Icon name="phone" className="h-4 w-4" />
@@ -118,7 +118,7 @@ export default function LeadCards({
                 <button
                   type="button"
                   onClick={() => onCriarSite(lead)}
-                  className="rounded-lg bg-brand-500/15 p-2 text-brand-700 transition hover:bg-brand-500/25"
+                  className="rounded-lg bg-brand-500/15 p-2 text-brand-700 transition hover:bg-brand-500/25 dark:text-brand-400"
                   aria-label="Criar site"
                 >
                   <Icon name="sparkles" className="h-4 w-4" />

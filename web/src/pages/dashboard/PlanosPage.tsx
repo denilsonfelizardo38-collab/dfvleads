@@ -110,41 +110,41 @@ export default function PlanosPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Planos</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Planos</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Assine por Binance (USDT) ou PayPal. Após pagar, clique em confirmar — abre o WhatsApp com o
           comprovante pronto para o administrador ativar seu plano.
         </p>
       </div>
 
       {profile && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm">
+        <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 p-4 text-sm">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5">
-            <span className="text-slate-500">
-              Plano atual: <b className="text-slate-900">{profile.planoInfo ? profile.planoInfo.nome : 'Grátis'}</b>
+            <span className="text-slate-500 dark:text-slate-400">
+              Plano atual: <b className="text-slate-900 dark:text-white">{profile.planoInfo ? profile.planoInfo.nome : 'Grátis'}</b>
             </span>
             {profile.planoAtivo && profile.planExpires && (
-              <span className="text-slate-500">
-                Válido até <b className="text-slate-900">{new Date(profile.planExpires).toLocaleDateString('pt-BR')}</b>
+              <span className="text-slate-500 dark:text-slate-400">
+                Válido até <b className="text-slate-900 dark:text-white">{new Date(profile.planExpires).toLocaleDateString('pt-BR')}</b>
               </span>
             )}
-            <span className="text-slate-500">
-              Buscas: <b className="text-slate-900">{profile.searchesUsed ?? 0}{profile.planoInfo ? `/${profile.planoInfo.pesquisas}` : ''}</b>
+            <span className="text-slate-500 dark:text-slate-400">
+              Buscas: <b className="text-slate-900 dark:text-white">{profile.searchesUsed ?? 0}{profile.planoInfo ? `/${profile.planoInfo.pesquisas}` : ''}</b>
             </span>
-            <span className="text-slate-500">
-              Sites: <b className="text-slate-900">{profile.sitesUsed ?? 0}{profile.planoInfo ? `/${profile.planoInfo.sites}` : ''}</b>
+            <span className="text-slate-500 dark:text-slate-400">
+              Sites: <b className="text-slate-900 dark:text-white">{profile.sitesUsed ?? 0}{profile.planoInfo ? `/${profile.planoInfo.sites}` : ''}</b>
             </span>
           </div>
         </div>
       )}
 
       {etapa.fase === 'pagamento' ? (
-        <div className="max-w-xl space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
+        <div className="max-w-xl space-y-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 p-5">
           <div className="flex items-center justify-between">
-            <h2 className="font-bold text-slate-900">
+            <h2 className="font-bold text-slate-900 dark:text-white">
               Pagar {etapa.plano.nome} — {etapa.plano.precoUsd} USD
             </h2>
-            <button type="button" onClick={() => setEtapa({ fase: 'catalogo' })} className="text-xs text-slate-500 hover:text-slate-900">
+            <button type="button" onClick={() => setEtapa({ fase: 'catalogo' })} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
               cancelar
             </button>
           </div>
@@ -158,17 +158,17 @@ export default function PlanosPage() {
                 className={`rounded-xl border p-3 text-left transition ${
                   metodo === banco.metodo
                     ? 'border-brand-500 bg-brand-500/10'
-                    : 'border-slate-200 bg-slate-50 hover:border-slate-300'
+                    : 'border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03] hover:border-slate-300 dark:hover:border-white/15'
                 }`}
               >
-                <span className="block text-sm font-bold text-slate-900">{banco.nome}</span>
-                <span className="block text-xs text-slate-500">{banco.nota}</span>
+                <span className="block text-sm font-bold text-slate-900 dark:text-white">{banco.nome}</span>
+                <span className="block text-xs text-slate-500 dark:text-slate-400">{banco.nota}</span>
               </button>
             ))}
           </div>
 
           <label className="block space-y-1.5">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               {metodo === 'binance' ? 'ID / Pay ID / Hash Binance' : 'ID da transação PayPal'}
             </span>
             <textarea
@@ -176,11 +176,11 @@ export default function PlanosPage() {
               onChange={(evento) => setReferencia(evento.target.value)}
               rows={2}
               placeholder="Cole aqui o comprovante/ID da transferência"
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500"
+              className="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 px-3 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:border-brand-500"
             />
           </label>
 
-          <ol className="space-y-1 text-xs text-slate-500">
+          <ol className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
             <li>1. Faça a transferência de {etapa.plano.precoUsd} USD via {metodo === 'binance' ? 'Binance' : 'PayPal'}.</li>
             <li>2. Cole o ID/hash acima e clique em confirmar.</li>
             <li>3. Vai abrir o WhatsApp do administrador ({whatsappAdmin}) com tudo preenchido — envie.</li>
@@ -196,13 +196,13 @@ export default function PlanosPage() {
         <div className="grid gap-4 md:grid-cols-3">
           {carregando
             ? [...Array(3)].map((_, i) => (
-                <div key={i} className="h-64 animate-pulse rounded-2xl border border-slate-200 bg-white" />
+                <div key={i} className="h-64 animate-pulse rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900" />
               ))
             : planos.map((plano) => (
                 <div
                   key={plano.key}
-                  className={`relative flex flex-col rounded-2xl border bg-white p-5 ${
-                    plano.destaque ? 'border-brand-500/60 ring-1 ring-brand-500/30' : 'border-slate-200'
+                  className={`relative flex flex-col rounded-2xl border bg-white dark:bg-night-900 p-5 ${
+                    plano.destaque ? 'border-brand-500/60 ring-1 ring-brand-500/30' : 'border-slate-200 dark:border-white/10'
                   }`}
                 >
                   {plano.destaque && (
@@ -210,12 +210,12 @@ export default function PlanosPage() {
                       mais vendido
                     </span>
                   )}
-                  <h3 className="font-bold text-slate-900">{plano.nome}</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white">{plano.nome}</h3>
                   <p className="mt-1">
-                    <span className="text-3xl font-extrabold text-slate-900">{plano.precoUsd}</span>
-                    <span className="text-sm text-slate-500"> USD/mês</span>
+                    <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{plano.precoUsd}</span>
+                    <span className="text-sm text-slate-500 dark:text-slate-400"> USD/mês</span>
                   </p>
-                  <ul className="mt-4 flex-1 space-y-2 text-sm text-slate-600">
+                  <ul className="mt-4 flex-1 space-y-2 text-sm text-slate-600 dark:text-slate-300">
                     <li className="flex items-center gap-2">
                       <Icon name="check" className="h-3.5 w-3.5 text-brand-500" />
                       {plano.pesquisas} pesquisas de empresas
@@ -257,7 +257,7 @@ export default function PlanosPage() {
                     <button
                       type="button"
                       onClick={() => setEtapa({ fase: 'pagamento', plano })}
-                      className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-500 transition hover:border-slate-300 hover:text-slate-900"
+                      className="w-full rounded-xl border border-slate-200 dark:border-white/10 px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 transition hover:border-slate-300 dark:hover:border-white/15 hover:text-slate-900 dark:hover:text-white"
                     >
                       Ou pagar por WhatsApp (manual)
                     </button>
@@ -268,16 +268,16 @@ export default function PlanosPage() {
       )}
 
       {pendentes.length > 0 && (
-        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-800">
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-800 dark:text-amber-200">
           Você tem {pendentes.length} pagamento(s) aguardando confirmação do administrador. Assim que
           confirmar no WhatsApp, a ativação é rápida.
         </div>
       )}
 
       {historico.length > 0 && (
-        <div className="overflow-hidden rounded-2xl border border-slate-200">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="bg-slate-50 dark:bg-white/[0.03] text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-2.5">Plano</th>
                 <th className="px-4 py-2.5">Valor</th>
@@ -286,9 +286,9 @@ export default function PlanosPage() {
                 <th className="px-4 py-2.5">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
               {historico.map((pedido) => (
-                <tr key={pedido.id} className="text-slate-600">
+                <tr key={pedido.id} className="text-slate-600 dark:text-slate-300">
                   <td className="px-4 py-2.5">{pedido.plan_key}</td>
                   <td className="px-4 py-2.5">{pedido.amount_usd} USD</td>
                   <td className="px-4 py-2.5 capitalize">{pedido.metodo}</td>
@@ -297,10 +297,10 @@ export default function PlanosPage() {
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-bold ${
                         pedido.status === 'approved'
-                          ? 'bg-emerald-500/15 text-emerald-600'
+                          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
                           : pedido.status === 'pending'
-                            ? 'bg-amber-500/15 text-amber-700'
-                            : 'bg-red-500/15 text-red-600'
+                            ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300'
+                            : 'bg-red-500/15 text-red-600 dark:text-red-300'
                       }`}
                     >
                       {pedido.status === 'approved' ? 'aprovado' : pedido.status === 'pending' ? 'pendente' : 'rejeitado'}

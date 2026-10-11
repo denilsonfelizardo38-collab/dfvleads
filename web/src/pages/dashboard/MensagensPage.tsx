@@ -100,11 +100,11 @@ export default function MensagensPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Mensagens</h1>
-        <p className="mt-1 text-sm text-slate-500">Acompanhe e gere os seus contactos.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Mensagens</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Acompanhe e gere os seus contactos.</p>
       </div>
 
-      <div className="flex gap-1 overflow-x-auto border-b border-slate-200">
+      <div className="flex gap-1 overflow-x-auto border-b border-slate-200 dark:border-white/10">
         {ABAS.map((item) => (
           <button
             key={item.id}
@@ -113,8 +113,8 @@ export default function MensagensPage() {
             aria-pressed={aba === item.id}
             className={`shrink-0 border-b-2 px-3.5 py-2.5 text-sm font-medium transition ${
               aba === item.id
-                ? 'border-brand-500 text-brand-700'
-                : 'border-transparent text-slate-500 hover:text-slate-900'
+                ? 'border-brand-500 text-brand-700 dark:text-brand-400'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             {item.label}
@@ -123,17 +123,17 @@ export default function MensagensPage() {
       </div>
 
       {!leads && (
-        <div className="card flex items-center gap-3 text-sm text-slate-500">
+        <div className="card flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
           <Spinner /> Carregando contactos…
         </div>
       )}
 
       {leads && filtradas.length === 0 && (
         <div className="card text-center">
-          <Icon name="message" className="mx-auto h-8 w-8 text-slate-400" />
-          <p className="mt-3 text-sm text-slate-500">
+          <Icon name="message" className="mx-auto h-8 w-8 text-slate-400 dark:text-slate-500" />
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
             Nada por aqui ainda.{' '}
-            <Link to="/dashboard/pesquisar" className="font-semibold text-brand-700 hover:text-brand-500">
+            <Link to="/dashboard/pesquisar" className="font-semibold text-brand-700 dark:text-brand-400 hover:text-brand-500">
               Pesquise leads
             </Link>{' '}
             e contacte via WhatsApp para registar a conversa.
@@ -142,7 +142,7 @@ export default function MensagensPage() {
       )}
 
       {filtradas.length > 0 && (
-        <div className="divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:divide-white/10 dark:border-white/10 dark:bg-night-900">
           {filtradas.map(({ lead, contacto }) => {
             const numero = (lead.phone ?? '').replace(/\D/g, '');
             const mensagem = encodeURIComponent(
@@ -157,27 +157,27 @@ export default function MensagensPage() {
               : 'Ainda sem contacto registado.';
 
             return (
-              <div key={lead.id} className="flex flex-wrap items-center gap-3 bg-white px-4 py-3 transition hover:bg-slate-100">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-500/15 text-xs font-bold text-brand-700">
+              <div key={lead.id} className="flex flex-wrap items-center gap-3 bg-white px-4 py-3 transition hover:bg-slate-100 dark:bg-night-900 dark:hover:bg-white/5">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-500/15 text-xs font-bold text-brand-700 dark:text-brand-400">
                   {initials(lead.name)}
                 </span>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="truncate font-semibold text-slate-900">{lead.name}</p>
+                    <p className="truncate font-semibold text-slate-900 dark:text-white">{lead.name}</p>
                     {contacto?.respondido && (
                       <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 ring-1 ring-inset ring-emerald-500/30">
                         Respondido
                       </span>
                     )}
                     {!contacto && (
-                      <span className="rounded-full bg-slate-500/10 px-2 py-0.5 text-[10px] font-bold text-slate-400 ring-1 ring-inset ring-slate-500/30">
+                      <span className="rounded-full bg-slate-500/10 px-2 py-0.5 text-[10px] font-bold text-slate-400 dark:text-slate-500 ring-1 ring-inset ring-slate-500/30">
                         Novo
                       </span>
                     )}
                   </div>
-                  <p className="mt-0.5 truncate text-xs text-slate-500">{preview}</p>
-                  <p className="mt-0.5 text-[11px] text-slate-400">
+                  <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{preview}</p>
+                  <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
                     {lead.phone ?? 'sem telefone'} ·{' '}
                     {contacto ? formatDate(contacto.em) : `Lead de ${lead.cidade || 'busca anterior'}`}
                   </p>
@@ -195,7 +195,7 @@ export default function MensagensPage() {
                           ...listarContactos().filter((c) => c.leadId !== lead.id),
                         ])
                       }
-                      className="rounded-lg bg-brand-500/15 p-2 text-brand-700 transition hover:bg-brand-500/25"
+                      className="rounded-lg bg-brand-500/15 p-2 text-brand-700 dark:text-brand-400 transition hover:bg-brand-500/25"
                       aria-label="Abrir WhatsApp"
                     >
                       <Icon name="message" className="h-4 w-4" />
@@ -204,7 +204,7 @@ export default function MensagensPage() {
                   <button
                     type="button"
                     onClick={() => registrarLigacao(lead)}
-                    className="rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
+                    className="rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                     aria-label="Ligar"
                   >
                     <Icon name="phone" className="h-4 w-4" />
@@ -216,7 +216,7 @@ export default function MensagensPage() {
                       className={`rounded-lg p-2 transition ${
                         contacto.respondido
                           ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25'
-                          : 'border border-slate-200 bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900'
+                          : 'border border-slate-200 bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white'
                       }`}
                       aria-label={contacto.respondido ? 'Marcar como não respondido' : 'Marcar como respondido'}
                     >

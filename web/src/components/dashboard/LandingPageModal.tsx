@@ -110,17 +110,17 @@ export default function LandingPageModal({ lead, onClose }: LandingPageModalProp
       onClick={onClose}
     >
       <div
-        className="animate-fade-up flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+        className="animate-fade-up flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-night-900 shadow-2xl"
         onClick={(evento) => evento.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+        <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-white/10 px-5 py-4">
           <div className="flex items-center gap-3">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-500/15 text-brand-500">
               <Icon name="sparkles" className="h-4.5 w-4.5" />
             </span>
             <div>
-              <h2 className="font-bold text-slate-900">Criar site — {lead.name}</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-bold text-slate-900 dark:text-white">Criar site — {lead.name}</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {lead.address ?? 'Endereço não informado'} · {lead.phone ?? 'sem telefone'}
               </p>
             </div>
@@ -128,7 +128,7 @@ export default function LandingPageModal({ lead, onClose }: LandingPageModalProp
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
+            className="rounded-lg p-1.5 text-slate-500 dark:text-slate-400 transition hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white"
             aria-label="Fechar"
           >
             <Icon name="x" className="h-4 w-4" />
@@ -137,16 +137,16 @@ export default function LandingPageModal({ lead, onClose }: LandingPageModalProp
 
         {estado.fase === 'confirmar' && (
           <div className="space-y-4 p-5">
-            <p className="text-sm text-slate-600">
-              A IA vai <strong className="text-slate-900">analisar este negócio</strong> (tipo, clientes,
-              o que eles precisam) e <strong className="text-slate-900">decidir a solução digital</strong>:
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              A IA vai <strong className="text-slate-900 dark:text-white">analisar este negócio</strong> (tipo, clientes,
+              o que eles precisam) e <strong className="text-slate-900 dark:text-white">decidir a solução digital</strong>:
               seções, funcionalidades, formulário e mensagem de WhatsApp contextuais — nada de
               template genérico.
             </p>
-            <p className="text-xs text-amber-700">
+            <p className="text-xs text-amber-700 dark:text-amber-300">
               Cada geração (ou regeneração) consome 1 site da sua cota.
             </p>
-            <ul className="space-y-1.5 text-sm text-slate-500">
+            <ul className="space-y-1.5 text-sm text-slate-500 dark:text-slate-400">
               {[
                 'Usa só os dados reais: nome, telefone, endereço, avaliação do mapa — nunca inventa preços nem avaliações',
                 'Moeda e idioma certos para o país do negócio',
@@ -166,7 +166,7 @@ export default function LandingPageModal({ lead, onClose }: LandingPageModalProp
         )}
 
         {estado.fase === 'gerando' && (
-          <div className="flex flex-1 flex-col items-center justify-center gap-3 p-16 text-sm text-slate-500">
+          <div className="flex flex-1 flex-col items-center justify-center gap-3 p-16 text-sm text-slate-500 dark:text-slate-400">
             <Spinner size="lg" />
             Analisando o negócio, planejando a solução e construindo o site… (~20–40 s)
           </div>
@@ -175,14 +175,14 @@ export default function LandingPageModal({ lead, onClose }: LandingPageModalProp
         {estado.fase === 'pronta' && (
           <>
             {estado.analise && (
-              <div className="border-b border-slate-200 bg-slate-50 px-5 py-3 text-xs">
+              <div className="border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03] px-5 py-3 text-xs">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-brand-500/15 px-2.5 py-1 font-bold text-brand-700">
+                  <span className="rounded-full bg-brand-500/15 px-2.5 py-1 font-bold text-brand-700 dark:text-brand-400">
                     {estado.analise.negocio}
                   </span>
-                  <span className="text-slate-500">{estado.analise.solucao}</span>
+                  <span className="text-slate-500 dark:text-slate-400">{estado.analise.solucao}</span>
                 </div>
-                <p className="mt-1.5 text-slate-500">
+                <p className="mt-1.5 text-slate-500 dark:text-slate-400">
                   Seções: {estado.analise.secoes.join(' · ')} — {estado.analise.moeda} ·{' '}
                   {estado.analise.arquitetura}
                 </p>
@@ -194,12 +194,12 @@ export default function LandingPageModal({ lead, onClose }: LandingPageModalProp
               className="min-h-0 w-full flex-1 bg-white"
               sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
             />
-            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 px-5 py-3">
-              <span className="text-xs text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 dark:border-white/10 px-5 py-3">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
                 {estado.publicado ? (
                   <>
                     Publicado em{' '}
-                    <a href={estado.publicado} target="_blank" rel="noreferrer" className="font-bold text-brand-700 hover:underline">
+                    <a href={estado.publicado} target="_blank" rel="noreferrer" className="font-bold text-brand-700 dark:text-brand-400 hover:underline">
                       {estado.publicado}
                     </a>{' '}
                     (link copiado)
